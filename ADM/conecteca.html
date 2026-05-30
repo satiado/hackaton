@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CONECTECA — Sistema de Biblioteca</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #F5F6F8;
@@ -18,16 +18,18 @@
     --blue-dark: #1E2733;
     --blue-mid: #2C3E50;
     --blue-light: #ECF0F1;
+    --blue-accent: #2980B9;
+    --blue-accent-light: #EBF5FF;
     --text-primary: #1E2733;
     --text-secondary: #5D6D7E;
     --text-muted: #95A5A6;
     --border: #E8ECF0;
     --green: #27AE60;
     --green-light: #EAFAF1;
-    --yellow: #F39C12;
-    --yellow-light: #FEF9E7;
+    --yellow: #E67E22;
+    --yellow-light: #FEF0E0;
     --shadow-sm: 0 1px 4px rgba(30,39,51,0.07);
-    --shadow-md: 0 4px 16px rgba(30,39,51,0.10);
+    --shadow-md: 0 4px 20px rgba(30,39,51,0.11);
     --radius: 10px;
     --radius-sm: 6px;
   }
@@ -44,14 +46,13 @@
     font-size: 14px;
   }
 
-  /* SIDEBAR */
+  /* ── SIDEBAR ── */
   .sidebar {
     width: 220px;
     min-width: 220px;
     background: var(--sidebar-bg);
     display: flex;
     flex-direction: column;
-    padding: 0;
     z-index: 10;
   }
 
@@ -96,14 +97,12 @@
     padding: 10px 12px;
     border-radius: var(--radius-sm);
     color: rgba(255,255,255,0.55);
-    font-size: 13px;
+    font-size: 11.5px;
     font-weight: 500;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.06em;
     cursor: pointer;
     transition: all 0.18s;
     text-transform: uppercase;
-    font-size: 11.5px;
-    letter-spacing: 0.06em;
   }
 
   .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
@@ -148,7 +147,7 @@
   }
   .btn-quick:hover { background: var(--red-mid); }
 
-  /* MAIN */
+  /* ── MAIN ── */
   .main {
     flex: 1;
     display: flex;
@@ -156,7 +155,7 @@
     overflow: hidden;
   }
 
-  /* TOPBAR */
+  /* ── TOPBAR ── */
   .topbar {
     background: var(--red);
     height: 56px;
@@ -182,7 +181,6 @@
   }
 
   .topbar-search:focus-within { background: rgba(255,255,255,0.22); }
-
   .topbar-search svg { color: rgba(255,255,255,0.7); flex-shrink: 0; }
 
   .topbar-search input {
@@ -197,6 +195,18 @@
   }
 
   .topbar-search input::placeholder { color: rgba(255,255,255,0.55); }
+
+  /* Topbar for audit page */
+  .topbar-left-info { display: flex; flex-direction: column; }
+  .topbar-crumb {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .topbar-crumb span { color: rgba(255,255,255,0.9); }
+  .topbar-subtitle { font-size: 13px; font-weight: 700; color: #fff; margin-top: 1px; }
 
   .topbar-right {
     display: flex;
@@ -236,10 +246,9 @@
     text-align: right;
     line-height: 1.4;
   }
-
   .topbar-date .day { font-weight: 600; color: #fff; font-size: 13px; }
 
-  /* PAGE CONTENT */
+  /* ── PAGE CONTENT ── */
   .page-content {
     flex: 1;
     overflow-y: auto;
@@ -248,7 +257,11 @@
   }
   .page-content.active { display: block; }
 
-  /* SECTION HEADER */
+  /* Topbar modes */
+  #topbar-default { display: flex; flex: 1; gap: 16px; align-items: center; }
+  #topbar-livros  { display: none; flex: 1; gap: 16px; align-items: center; }
+
+  /* ── SECTION HEADER ── */
   .section-header {
     display: flex;
     align-items: flex-start;
@@ -270,18 +283,9 @@
     margin-top: 3px;
   }
 
-  .section-title .red-bar {
-    display: inline-block;
-    width: 3px;
-    height: 100%;
-    background: var(--red);
-    border-radius: 2px;
-    margin-right: 10px;
-  }
-
   .section-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-  /* BUTTONS */
+  /* ── BUTTONS ── */
   .btn {
     padding: 8px 16px;
     border-radius: var(--radius-sm);
@@ -307,8 +311,12 @@
   .btn-yellow:hover { opacity: 0.9; }
   .btn-dark { background: var(--blue-mid); color: #fff; }
   .btn-dark:hover { opacity: 0.85; }
+  .btn-blue { background: var(--blue-accent); color: #fff; }
+  .btn-blue:hover { opacity: 0.88; }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-green:hover { opacity: 0.88; }
 
-  /* STAT CARDS */
+  /* ── STAT CARDS ── */
   .stat-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -358,16 +366,14 @@
   .stat-card.highlighted { border-left: 3px solid var(--red); }
   .stat-card.highlighted .stat-value { color: var(--red); }
 
-  /* CONTENT GRID */
+  /* ── CONTENT GRID ── */
   .content-grid {
     display: grid;
     grid-template-columns: 1fr 340px;
     gap: 18px;
   }
 
-  .content-grid.full { grid-template-columns: 1fr; }
-
-  /* CARD */
+  /* ── CARD ── */
   .card {
     background: var(--surface);
     border-radius: var(--radius);
@@ -392,13 +398,11 @@
     letter-spacing: -0.01em;
   }
 
+  .card-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
   .card-actions { display: flex; gap: 8px; align-items: center; }
 
-  /* TABLE */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; }
 
   thead th {
     padding: 10px 16px;
@@ -428,7 +432,7 @@
     vertical-align: middle;
   }
 
-  /* AVATAR */
+  /* ── AVATAR ── */
   .avatar-circle {
     width: 32px; height: 32px;
     border-radius: 50%;
@@ -449,7 +453,7 @@
   .av-ab { background: #FADBD8; color: #922B21; }
   .av-rm { background: #EBF5FB; color: #1A5276; }
 
-  /* STATUS BADGE */
+  /* ── STATUS BADGE ── */
   .status {
     display: inline-flex;
     align-items: center;
@@ -466,19 +470,19 @@
   .status-saida { background: #F2F3F4; color: var(--text-muted); }
   .status-presente { background: #EAFAF1; color: var(--green); }
   .status-ausente { background: #F2F3F4; color: var(--text-muted); }
-  .status-conforme { background: #EAFAF1; color: var(--green); }
-  .status-divergente { background: var(--red-light); color: var(--red); }
   .status-renovado { background: #EBF5FF; color: #2471A3; }
   .status-vencido { background: var(--red-light); color: var(--red); }
-  .status-ok { background: var(--green-light); color: var(--green); }
-  .status-alerta { background: var(--yellow-light); color: var(--yellow); }
 
-  /* STATUS DOT */
+  .s-ok { background: var(--green-light); color: var(--green); }
+  .s-div { background: var(--red-light); color: var(--red); }
+  .s-excess { background: var(--yellow-light); color: var(--yellow); }
+
   .dot { width: 7px; height: 7px; border-radius: 50%; }
   .dot-green { background: var(--green); }
   .dot-gray { background: var(--text-muted); }
+  .dot8 { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-  /* ACTION LINK */
+  /* ── ACTION LINK ── */
   .action-link {
     color: var(--red);
     font-size: 12px;
@@ -489,7 +493,7 @@
   }
   .action-link:hover { text-decoration: underline; }
 
-  /* LOAN CARDS (sidebar) */
+  /* ── LOAN ITEMS ── */
   .loan-list { padding: 8px 0; }
 
   .loan-item {
@@ -503,15 +507,7 @@
   }
   .loan-item:last-child { border-bottom: none; }
   .loan-item:hover { background: #FAFBFC; }
-
   .loan-item-top { display: flex; align-items: flex-start; gap: 10px; }
-
-  .book-thumb {
-    width: 38px; height: 50px;
-    border-radius: 4px;
-    flex-shrink: 0;
-    object-fit: cover;
-  }
 
   .book-thumb-placeholder {
     width: 38px; height: 50px;
@@ -525,16 +521,13 @@
   .loan-item .book-title { font-size: 13px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
   .loan-item .book-by { font-size: 11px; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.04em; }
   .loan-item .time { font-size: 11px; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; margin-top: 4px; }
-
-  .loan-item-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
+  .loan-item-bottom { display: flex; align-items: center; justify-content: space-between; }
   .loan-item-bottom .due { font-size: 11px; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
 
-  /* ALERT BOX */
+  .border-red { border-left: 3px solid var(--red); }
+  .border-dark { border-left: 3px solid var(--blue-mid); }
+
+  /* ── ALERT BOX ── */
   .alert-box {
     background: var(--red);
     border-radius: var(--radius);
@@ -592,7 +585,7 @@
   }
   .btn-notify:hover { background: rgba(255,255,255,0.25); }
 
-  /* STUDENT ACTIVITY CARD */
+  /* ── STUDENT ACTIVITY ── */
   .student-activity-card {
     background: var(--surface);
     border-radius: var(--radius);
@@ -660,62 +653,7 @@
   .loan-mini-info .ltitle { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .loan-mini-info .ldate { font-size: 11px; color: var(--text-muted); }
 
-  /* INVENTORY DETAILS PANEL */
-  .detail-panel {
-    background: var(--surface);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
-  }
-
-  .detail-panel-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-
-  .detail-panel-body { padding: 16px; }
-
-  .book-cover-placeholder {
-    width: 100%;
-    height: 140px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 32px;
-  }
-
-  .detail-title { font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 4px; }
-  .detail-author { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
-
-  .detail-row {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 10px;
-  }
-  .detail-row .dlabel { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
-
-  .tag {
-    padding: 3px 9px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .tag-yellow { background: var(--yellow-light); color: var(--yellow); }
-  .tag-red { background: var(--red-light); color: var(--red); }
-
-  .detail-panel-actions { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px; }
-
-  /* MONO */
-  .mono { font-family: 'DM Mono', monospace; font-size: 12px; }
-
-  /* FOOTER STATS */
+  /* ── FOOTER STAT GRID ── */
   .footer-stat-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -747,19 +685,8 @@
   .fsc-value .sub { font-size: 12px; font-weight: 500; color: var(--green); margin-left: 4px; }
   .fsc-value.alerta { color: var(--red); }
 
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-  /* DIVIDER */
-  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
-
-  /* PAGINATION */
-  .pagination {
-    display: flex; align-items: center; gap: 4px;
-  }
+  /* ── PAGINATION ── */
+  .pagination { display: flex; align-items: center; gap: 4px; }
 
   .pg-btn {
     width: 28px; height: 28px;
@@ -777,7 +704,7 @@
   .pg-btn:hover { border-color: var(--red); color: var(--red); }
   .pg-btn.active { background: var(--red); border-color: var(--red); color: #fff; }
 
-  /* CATEGORY TAG */
+  /* ── CAT TAG ── */
   .cat-tag {
     padding: 3px 9px;
     border-radius: 4px;
@@ -788,23 +715,295 @@
     letter-spacing: 0.03em;
   }
 
-  /* DIVERGENT NUMBER */
-  .div-num { color: var(--red); font-weight: 700; }
-
-  /* RED BAR LEFT BORDER ON ITEMS */
-  .border-red { border-left: 3px solid var(--red); }
-  .border-dark { border-left: 3px solid var(--blue-mid); }
-
-  /* INVENTORY GRID */
-  .inventory-grid {
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 18px;
+  .cat {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    background: var(--bg);
+    color: var(--text-secondary);
   }
 
-  .tag-location { background: #F0F3F6; color: var(--text-secondary); }
+  /* ── MONO ── */
+  .mono { font-family: 'DM Mono', monospace; font-size: 11.5px; color: var(--text-muted); }
 
-  /* TOAST */
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  /* ── AUDIT PHASES ── */
+  .audit-phases {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .phase {
+    flex: 1;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-right: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .phase:last-child { border-right: none; }
+  .phase:hover { background: #FAFBFC; }
+  .phase.done { background: var(--green-light); }
+  .phase.active { background: var(--blue-accent-light); }
+
+  .phase-num {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800;
+    flex-shrink: 0;
+    background: var(--border);
+    color: var(--text-muted);
+  }
+  .phase.done .phase-num { background: var(--green); color: #fff; }
+  .phase.active .phase-num { background: var(--blue-accent); color: #fff; }
+
+  .phase-info .ph-label {
+    font-size: 10.5px; font-weight: 700; letter-spacing: 0.07em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+  .phase.done .phase-info .ph-label { color: var(--green); }
+  .phase.active .phase-info .ph-label { color: var(--blue-accent); }
+  .phase-info .ph-name { font-size: 12.5px; font-weight: 600; color: var(--text-primary); margin-top: 1px; }
+
+  /* ── STAT STRIP (audit) ── */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .stat-chip {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .stat-chip .sc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .stat-chip .sc-val { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; color: var(--text-primary); }
+  .stat-chip .sc-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .stat-chip.danger { border-left: 3px solid var(--red); }
+  .stat-chip.danger .sc-val { color: var(--red); }
+  .stat-chip.ok { border-left: 3px solid var(--green); }
+  .stat-chip.ok .sc-val { color: var(--green); }
+  .stat-chip.warn { border-left: 3px solid var(--yellow); }
+  .stat-chip.warn .sc-val { color: var(--yellow); }
+
+  /* ── AUDIT GRID ── */
+  .audit-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 18px;
+    align-items: start;
+  }
+
+  /* ── AUDIT TABLE STYLES ── */
+  .diff-cell { display: flex; align-items: center; gap: 6px; font-family: 'DM Mono', monospace; font-size: 12px; }
+  .diff-neg { color: var(--red); font-weight: 700; }
+  .diff-pos { color: var(--green); font-weight: 700; }
+  .diff-zero { color: var(--text-muted); }
+
+  .row-div td:first-child { border-left: 3px solid var(--red); }
+  .row-ok td:first-child { border-left: 3px solid var(--green); }
+  .row-excess td:first-child { border-left: 3px solid var(--yellow); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+  .progress-pct { font-size: 13px; font-weight: 800; color: var(--blue-accent); }
+  .progress-bar-bg { height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--blue-accent); border-radius: 10px; transition: width 0.8s ease; }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #FAFBFC;
+  }
+
+  .filter-chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    transition: all 0.12s;
+    letter-spacing: 0.03em;
+  }
+  .filter-chip:hover { border-color: var(--blue-accent); color: var(--blue-accent); }
+  .filter-chip.active { background: var(--blue-dark); color: #fff; border-color: var(--blue-dark); }
+  .filter-chip.red.active { background: var(--red); border-color: var(--red); color: #fff; }
+  .filter-spacer { flex: 1; }
+
+  .filter-search {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 5px 10px;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--text-primary);
+    outline: none;
+    width: 180px;
+  }
+  .filter-search:focus { border-color: var(--blue-accent); }
+
+  /* ── FAB BAR ── */
+  .fab-bar {
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+    background: #FAFBFC;
+  }
+  .fab-bar .hint { font-size: 11px; color: var(--text-muted); margin-right: auto; }
+
+  /* ── SUMMARY ROWS ── */
+  .summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-row .sr-label { font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 7px; }
+  .summary-row .sr-val { font-size: 15px; font-weight: 800; }
+
+  /* ── SCANNER ── */
+  .scanner-area {
+    padding: 18px;
+    border-bottom: 1px solid var(--border);
+    background: #FAFBFC;
+  }
+  .scanner-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .scanner-input-row { display: flex; gap: 8px; }
+  .scanner-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .scanner-input:focus { border-color: var(--blue-accent); }
+  .scanner-input::placeholder { color: var(--text-muted); font-size: 12px; }
+
+  /* ── ACTIVITY LOG ── */
+  .log-list { max-height: 260px; overflow-y: auto; }
+
+  .log-item {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .log-item:last-child { border-bottom: none; }
+  .log-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+  .log-info .lt { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+  .log-info .ls { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .log-time { font-size: 10.5px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-left: auto; flex-shrink: 0; }
+
+  /* ── BADGE INLINE ── */
+  .badge-inline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    background: var(--red-light);
+    color: var(--red);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,39,51,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    width: 520px;
+    max-width: 95vw;
+    animation: slideUp 0.25s ease;
+    overflow: hidden;
+  }
+  @keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .modal-header .mh-title { font-size: 16px; font-weight: 800; }
+  .modal-header .mh-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .modal-close { cursor: pointer; color: var(--text-muted); padding: 2px; }
+  .modal-close:hover { color: var(--text-primary); }
+  .modal-body { padding: 20px 24px; }
+  .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px; }
+  .form-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--blue-accent); background: var(--surface); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* ── TOAST ── */
   .toast {
     position: fixed;
     bottom: 24px; right: 24px;
@@ -821,7 +1020,15 @@
   }
   @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
   .alert-triangle { color: var(--yellow); }
+  .sys-val { font-weight: 600; color: var(--text-secondary); }
+  .col-val { font-weight: 700; color: var(--text-primary); }
 </style>
 </head>
 <body>
@@ -871,21 +1078,43 @@
 
   <!-- TOPBAR -->
   <div class="topbar">
-    <div class="topbar-search">
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" placeholder="Buscar por título, aluno, matrícula...">
+    <!-- Default topbar (Painel / Alunos / Configurações) -->
+    <div id="topbar-default">
+      <div class="topbar-search">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Buscar por título, aluno, matrícula...">
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="badge">3</div>
+        </div>
+        <div class="topbar-date">
+          <div class="day">24 DE OUT, 2023</div>
+          <div>10:42 AM</div>
+        </div>
+      </div>
     </div>
-    <div class="topbar-right">
-      <div class="topbar-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <div class="badge">3</div>
+
+    <!-- Livros topbar -->
+    <div id="topbar-livros">
+      <div class="topbar-left-info">
+        <div class="topbar-crumb">
+          <span style="color:rgba(255,255,255,0.6)">Livros</span>
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          <span>Auditoria de Acervo</span>
+        </div>
+        <div class="topbar-subtitle">AUD-2023-10-24 · Em andamento</div>
       </div>
-      <div class="topbar-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-      </div>
-      <div class="topbar-date">
-        <div class="day">24 DE OUT, 2023</div>
-        <div>10:42 AM</div>
+      <div class="topbar-right">
+        <div class="topbar-icon">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <div class="badge">3</div>
+        </div>
+        <div class="topbar-date">
+          <div class="day">24 DE OUT, 2023</div>
+          <div>10:42 AM</div>
+        </div>
       </div>
     </div>
   </div>
@@ -917,7 +1146,6 @@
     </div>
 
     <div class="content-grid">
-      <!-- Activity Table -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">Atividade em Tempo Real</span>
@@ -972,7 +1200,6 @@
         </table>
       </div>
 
-      <!-- Active Loans -->
       <div class="card">
         <div class="card-header">
           <span class="card-title">Empréstimos Ativos</span>
@@ -995,7 +1222,6 @@
               <span class="status status-renovado">Renovado</span>
             </div>
           </div>
-
           <div class="loan-item border-dark">
             <div class="loan-item-top">
               <div class="book-thumb-placeholder" style="background:#27AE60">📘</div>
@@ -1012,7 +1238,6 @@
               <span class="due">Vencimento: 05 nov</span>
             </div>
           </div>
-
           <div class="loan-item border-red">
             <div class="loan-item-top">
               <div class="book-thumb-placeholder" style="background:#2C3E50">📙</div>
@@ -1055,7 +1280,6 @@
     </div>
 
     <div class="content-grid">
-      <!-- Student List -->
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="card">
           <div class="card-header">
@@ -1089,9 +1313,7 @@
                 <td><span class="cat-tag">Graduação</span></td>
                 <td><span class="status status-presente"><span class="dot dot-green"></span>Presente</span></td>
                 <td style="color:var(--text-secondary);font-size:12px">4x por semana</td>
-                <td>
-                  <svg width="16" height="16" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </td>
+                <td><svg width="16" height="16" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></td>
               </tr>
               <tr onclick="showToast('Alertas: Ana Beatriz Silva possui livros em atraso')">
                 <td>
@@ -1109,9 +1331,7 @@
                 <td><span class="cat-tag">Pós-graduação</span></td>
                 <td><span class="status status-ausente"><span class="dot dot-gray"></span>Ausente</span></td>
                 <td style="color:var(--text-secondary);font-size:12px">2x por semana</td>
-                <td>
-                  <svg width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                </td>
+                <td><svg width="16" height="16" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></td>
               </tr>
               <tr onclick="showToast('Perfil de Dr. Ricardo Menezes carregado')">
                 <td>
@@ -1126,9 +1346,7 @@
                 <td><span class="cat-tag">Professor</span></td>
                 <td><span class="status status-presente"><span class="dot dot-green"></span>Presente</span></td>
                 <td style="color:var(--text-secondary);font-size:12px">Diário</td>
-                <td>
-                  <svg width="16" height="16" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </td>
+                <td><svg width="16" height="16" fill="none" stroke="var(--text-muted)" stroke-width="2" viewBox="0 0 24 24" style="cursor:pointer"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></td>
               </tr>
             </tbody>
           </table>
@@ -1144,7 +1362,6 @@
           </div>
         </div>
 
-        <!-- Footer Stats -->
         <div class="footer-stat-grid">
           <div class="footer-stat-card">
             <div class="fsc-icon" style="background:#EBF5FB;font-size:20px;">👥</div>
@@ -1170,7 +1387,6 @@
         </div>
       </div>
 
-      <!-- Right Panel: Alert + Activity -->
       <div style="display:flex;flex-direction:column;gap:16px;">
         <div class="alert-box">
           <h3>
@@ -1233,143 +1449,270 @@
     </div>
   </div>
 
-  <!-- ==================== LIVROS ==================== -->
+  <!-- ==================== LIVROS (AUDITORIA) ==================== -->
   <div class="page-content" id="page-livros">
+
+    <!-- Page Header -->
     <div class="section-header">
       <div class="section-title">
-        <h1>Gestão do Acervo</h1>
-        <p>Controle de inventário e disponibilidade física vs. sistema.</p>
+        <h1>Auditoria de Acervo</h1>
+        <p>Comparação entre dados coletados pelo bibliotecário e o sistema de registro.</p>
       </div>
       <div class="section-actions">
-        <button class="btn btn-outline" onclick="showToast('Relatório exportado')">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <button class="btn btn-outline" onclick="openModal('export')">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Exportar Relatório
         </button>
-        <button class="btn btn-red" onclick="showToast('Formulário adicionar livro aberto')">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Adicionar Livro
-        </button>
-        <button class="btn btn-yellow" onclick="showToast('Auditoria iniciada')">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-          Iniciar Auditoria
+        <button class="btn btn-red" onclick="openModal('finalize')">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Finalizar Auditoria
         </button>
       </div>
     </div>
 
-    <!-- Inventory Stats -->
-    <div class="stat-grid" style="margin-bottom:20px;">
-      <div class="stat-card">
-        <div class="stat-icon icon-blue">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    <!-- Phase Bar -->
+    <div class="audit-phases">
+      <div class="phase done">
+        <div class="phase-num"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="phase-info">
+          <div class="ph-label">Fase 1 · Concluído</div>
+          <div class="ph-name">Configuração</div>
         </div>
-        <div class="stat-label">Acervo Total</div>
-        <div class="stat-value">12.480</div>
       </div>
-      <div class="stat-card" style="border-color:#2980B9;border-left:3px solid #2980B9">
-        <div class="stat-icon icon-blue">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      <div class="phase done">
+        <div class="phase-num"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="phase-info">
+          <div class="ph-label">Fase 2 · Concluído</div>
+          <div class="ph-name">Coleta em Campo</div>
         </div>
-        <div class="stat-label">Disponíveis</div>
-        <div class="stat-value" style="color:#2980B9">8.215</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon icon-blue">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <div class="phase active">
+        <div class="phase-num">3</div>
+        <div class="phase-info">
+          <div class="ph-label">Fase 3 · Atual</div>
+          <div class="ph-name">Comparação & Revisão</div>
         </div>
-        <div class="stat-label">Emprestados</div>
-        <div class="stat-value">4.265</div>
       </div>
-      <div class="stat-card highlighted">
-        <div class="stat-icon icon-red">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div class="phase">
+        <div class="phase-num">4</div>
+        <div class="phase-info">
+          <div class="ph-label">Fase 4 · Pendente</div>
+          <div class="ph-name">Ajustes do Sistema</div>
         </div>
-        <div class="stat-label">Divergências</div>
-        <div class="stat-value">32</div>
+      </div>
+      <div class="phase">
+        <div class="phase-num">5</div>
+        <div class="phase-info">
+          <div class="ph-label">Fase 5 · Pendente</div>
+          <div class="ph-name">Relatório Final</div>
+        </div>
       </div>
     </div>
 
-    <div class="inventory-grid">
-      <!-- Inventory Table -->
+    <!-- Stat Strip -->
+    <div class="stat-strip">
+      <div class="stat-chip">
+        <div class="sc-label">Total no Sistema</div>
+        <div class="sc-val">12.480</div>
+        <div class="sc-sub">Exemplares registrados</div>
+      </div>
+      <div class="stat-chip">
+        <div class="sc-label">Coletados em Campo</div>
+        <div class="sc-val">12.401</div>
+        <div class="sc-sub">Verificados fisicamente</div>
+      </div>
+      <div class="stat-chip ok">
+        <div class="sc-label">Conformes</div>
+        <div class="sc-val">11</div>
+        <div class="sc-sub">Títulos sem divergência</div>
+      </div>
+      <div class="stat-chip danger">
+        <div class="sc-label">Divergentes</div>
+        <div class="sc-val">5</div>
+        <div class="sc-sub">Requerem ação</div>
+      </div>
+      <div class="stat-chip warn">
+        <div class="sc-label">Excedentes</div>
+        <div class="sc-val">2</div>
+        <div class="sc-sub">Físico maior que sistema</div>
+      </div>
+    </div>
+
+    <!-- Audit Grid -->
+    <div class="audit-grid">
+
+      <!-- LEFT: Comparison Table -->
       <div class="card">
         <div class="card-header">
-          <span class="card-title">Auditoria de Inventário</span>
-          <div class="card-actions">
-            <button class="btn btn-outline" onclick="showToast('Filtro de categoria aplicado')">Filtrar Categoria</button>
-            <button class="btn btn-outline" onclick="showToast('Status: Todos')">Status: Todos</button>
+          <div>
+            <div class="card-title">Comparação de Acervo</div>
+            <div class="card-sub">Sistema vs. Coleta Física — 18 títulos auditados</div>
+          </div>
+          <button class="btn btn-blue" onclick="openModal('scan')">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Registrar Leitura
+          </button>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <span class="progress-label">Progresso da Auditoria — Estante B4, Corredor 2</span>
+            <span class="progress-pct">73%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width:73%"></div>
           </div>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Título do Livro</th>
-              <th>ISBN</th>
-              <th>Categoria</th>
-              <th>Sistema</th>
-              <th>Físico</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr onclick="selectBook('A República','Platão','978-85-359-0232-4','FILOSOFIA',12,12,'conforme','BOM / USO REGULAR','ALTA','ESTANTE A2, CORREDOR 1')">
-              <td style="font-weight:600">A República</td>
-              <td class="mono" style="color:var(--text-muted)">978-85-359-0232-4</td>
-              <td><span class="cat-tag">Filosofia</span></td>
-              <td style="font-weight:600">12</td>
-              <td style="font-weight:600">12</td>
-              <td><span class="status status-conforme">Conforme</span></td>
-            </tr>
-            <tr class="selected" onclick="selectBook('Fundamentos da Física I','David Halliday, Robert Resnick','978-85-216-3035-7','ACADÊMICO',25,22,'divergente','BOM / USO REGULAR','ALTA','ESTANTE B4, CORREDOR 2')">
-              <td style="font-weight:600">Fundamentos da Física I</td>
-              <td class="mono" style="color:var(--text-muted)">978-85-216-3035-7</td>
-              <td><span class="cat-tag">Acadêmico</span></td>
-              <td style="font-weight:600">25</td>
-              <td style="font-weight:600" class="div-num">22</td>
-              <td><span class="status status-divergente">Divergente</span></td>
-            </tr>
-            <tr onclick="selectBook('Cem Anos de Solidão','Gabriel García Márquez','978-85-359-1234-5','LITERATURA',8,8,'conforme','BOM','MÉDIA','ESTANTE C1, CORREDOR 3')">
-              <td style="font-weight:600">Cem Anos de Solidão</td>
-              <td class="mono" style="color:var(--text-muted)">978-85-359-1234-5</td>
-              <td><span class="cat-tag">Literatura</span></td>
-              <td style="font-weight:600">8</td>
-              <td style="font-weight:600">8</td>
-              <td><span class="status status-conforme">Conforme</span></td>
-            </tr>
-            <tr onclick="selectBook('O Capital, Vol 1','Karl Marx','978-85-359-5678-9','ECONOMIA',15,16,'divergente','REGULAR','MÉDIA','ESTANTE D3, CORREDOR 4')">
-              <td style="font-weight:600">O Capital, Vol 1</td>
-              <td class="mono" style="color:var(--text-muted)">978-85-359-5678-9</td>
-              <td><span class="cat-tag">Economia</span></td>
-              <td style="font-weight:600">15</td>
-              <td style="font-weight:600" class="div-num">16</td>
-              <td><span class="status status-divergente">Divergente</span></td>
-            </tr>
-          </tbody>
-        </table>
+
+        <div class="filter-bar">
+          <div class="filter-chip active" onclick="setFilter(this,'all')">Todos (18)</div>
+          <div class="filter-chip red" onclick="setFilter(this,'div')">Divergentes <span class="badge-inline" style="margin-left:2px">5</span></div>
+          <div class="filter-chip" onclick="setFilter(this,'ok')">Conformes</div>
+          <div class="filter-chip" onclick="setFilter(this,'excess')">Excedentes</div>
+          <div class="filter-spacer"></div>
+          <input class="filter-search" placeholder="🔍  Buscar título ou ISBN..." oninput="filterTable(this.value)">
+        </div>
+
+        <div style="overflow-x:auto">
+          <table id="audit-table">
+            <thead>
+              <tr>
+                <th style="width:28%">Título</th>
+                <th>ISBN</th>
+                <th>Categoria</th>
+                <th style="text-align:center">Sistema</th>
+                <th style="text-align:center">Coletado</th>
+                <th style="text-align:center">Diferença</th>
+                <th>Status</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="fab-bar">
+          <span class="hint">5 divergências encontradas — revise antes de finalizar</span>
+          <button class="btn btn-outline" onclick="showToast('Exportando divergências...')">Exportar Divergências</button>
+          <button class="btn btn-green" onclick="openModal('finalize')">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Finalizar & Aplicar Ajustes
+          </button>
+        </div>
       </div>
 
-      <!-- Detail Panel -->
-      <div class="detail-panel" id="detail-panel">
-        <div class="detail-panel-header">Detalhes do Selecionado</div>
-        <div class="detail-panel-body">
-          <div class="book-cover-placeholder" style="background:linear-gradient(135deg,#BDC3C7 0%,#95A5A6 100%);">📚</div>
-          <div class="detail-title" id="dp-title">Fundamentos da Física I</div>
-          <div class="detail-author" id="dp-author">Autor: David Halliday, Robert Resnick</div>
-          <div class="detail-row">
-            <span class="dlabel">Estado de Conservação</span>
-            <span class="tag tag-yellow" id="dp-conservacao">Bom / Uso Regular</span>
-          </div>
-          <div class="detail-row">
-            <span class="dlabel">Demanda / Popularidade</span>
-            <span class="tag tag-red" id="dp-demanda">Alta</span>
-          </div>
-          <div class="detail-row">
-            <span class="dlabel">Localização Física</span>
-            <span class="tag tag-location" id="dp-local">Estante B4, Corredor 2</span>
+      <!-- RIGHT PANEL -->
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <!-- Summary -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">Resumo da Auditoria</div></div>
+          <div style="padding:0 18px">
+            <div class="summary-row">
+              <span class="sr-label"><span class="dot8" style="background:var(--green)"></span>Conformes</span>
+              <span class="sr-val" style="color:var(--green)">11</span>
+            </div>
+            <div class="summary-row">
+              <span class="sr-label"><span class="dot8" style="background:var(--red)"></span>Com déficit</span>
+              <span class="sr-val" style="color:var(--red)">5</span>
+            </div>
+            <div class="summary-row">
+              <span class="sr-label"><span class="dot8" style="background:var(--yellow)"></span>Com excedente</span>
+              <span class="sr-val" style="color:var(--yellow)">2</span>
+            </div>
+            <div class="summary-row">
+              <span class="sr-label"><span class="dot8" style="background:var(--text-muted)"></span>Não verificados</span>
+              <span class="sr-val" style="color:var(--text-muted)">0</span>
+            </div>
+            <div class="summary-row" style="border-bottom:none;padding-bottom:14px">
+              <span class="sr-label" style="font-weight:700;color:var(--text-primary)">Exemplares em falta</span>
+              <span class="sr-val" style="color:var(--red)">−79</span>
+            </div>
           </div>
         </div>
-        <div class="detail-panel-actions">
-          <button class="btn btn-outline" style="width:100%;justify-content:center" onclick="showToast('Histórico de empréstimos carregado')">Ver Histórico de Empréstimos</button>
-          <button class="btn btn-red" style="width:100%;justify-content:center" onclick="showToast('Formulário de dano/extravio aberto')">Reportar Dano/Extravio</button>
+
+        <!-- Manual Insert -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Inserção Manual</div>
+              <div class="card-sub">Informe ISBN e quantidade coletada</div>
+            </div>
+          </div>
+          <div class="scanner-area">
+            <div class="scanner-label">ISBN do Livro</div>
+            <div class="scanner-input-row">
+              <input class="scanner-input" id="isbn-input" placeholder="Ex: 978-85-216-3035-7" />
+              <button class="btn btn-blue" onclick="quickScan()">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+            </div>
+          </div>
+          <div style="padding:14px 18px;display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <div class="scanner-label" style="margin-bottom:6px">Quantidade Coletada</div>
+              <input class="scanner-input" id="qty-input" type="number" placeholder="Ex: 22" style="width:100%" />
+            </div>
+            <div>
+              <div class="scanner-label" style="margin-bottom:6px">Observação (opcional)</div>
+              <input class="scanner-input" id="obs-input" placeholder="Ex: 2 exemplares danificados" style="width:100%" />
+            </div>
+            <button class="btn btn-blue" style="width:100%;justify-content:center" onclick="submitScan()">
+              Registrar Coleta
+            </button>
+          </div>
         </div>
+
+        <!-- Activity Log -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Log de Atividade</div>
+            <span style="font-size:11px;color:var(--text-muted)">Últimas ações</span>
+          </div>
+          <div class="log-list" id="log-list">
+            <div class="log-item">
+              <div class="log-dot" style="background:var(--red)"></div>
+              <div class="log-info">
+                <div class="lt">Fundamentos da Física I — Divergência</div>
+                <div class="ls">Sistema: 25 · Coletado: 22 · Δ −3</div>
+              </div>
+              <div class="log-time">10:38</div>
+            </div>
+            <div class="log-item">
+              <div class="log-dot" style="background:var(--yellow)"></div>
+              <div class="log-info">
+                <div class="lt">O Capital Vol 1 — Excedente</div>
+                <div class="ls">Sistema: 15 · Coletado: 16 · Δ +1</div>
+              </div>
+              <div class="log-time">10:35</div>
+            </div>
+            <div class="log-item">
+              <div class="log-dot" style="background:var(--green)"></div>
+              <div class="log-info">
+                <div class="lt">A República — Conforme</div>
+                <div class="ls">Sistema: 12 · Coletado: 12 · Δ 0</div>
+              </div>
+              <div class="log-time">10:31</div>
+            </div>
+            <div class="log-item">
+              <div class="log-dot" style="background:var(--green)"></div>
+              <div class="log-info">
+                <div class="lt">Cem Anos de Solidão — Conforme</div>
+                <div class="ls">Sistema: 8 · Coletado: 8 · Δ 0</div>
+              </div>
+              <div class="log-time">10:28</div>
+            </div>
+            <div class="log-item">
+              <div class="log-dot" style="background:var(--red)"></div>
+              <div class="log-info">
+                <div class="lt">Cálculo Vol 2 — Divergência</div>
+                <div class="ls">Sistema: 30 · Coletado: 24 · Δ −6</div>
+              </div>
+              <div class="log-time">10:22</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -1424,6 +1767,119 @@
 
 </main>
 
+<!-- ==================== MODALS ==================== -->
+
+<!-- MODAL SCAN -->
+<div class="modal-overlay" id="modal-scan" style="display:none" onclick="closeModal('scan')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <div class="mh-title">Registrar Leitura de Campo</div>
+        <div class="mh-sub">Insira os dados coletados pelo bibliotecário na estante</div>
+      </div>
+      <div class="modal-close" onclick="closeModal('scan')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>ISBN ou Código de Barras</label>
+        <input class="form-input" placeholder="Escaneie ou insira manualmente..." />
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0">
+          <label>Qtd. Coletada Fisicamente</label>
+          <input class="form-input" type="number" placeholder="0" />
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label>Estado dos Exemplares</label>
+          <select class="form-input"><option>Bom</option><option>Uso Regular</option><option>Danificado</option></select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px">
+        <label>Localização Verificada</label>
+        <input class="form-input" placeholder="Ex: Estante B4, Corredor 2" />
+      </div>
+      <div class="form-group">
+        <label>Observações</label>
+        <input class="form-input" placeholder="Notas sobre divergências ou condição do livro..." />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('scan')">Cancelar</button>
+      <button class="btn btn-blue" onclick="closeModal('scan');showToast('Leitura registrada com sucesso!')">Registrar Leitura</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FINALIZE -->
+<div class="modal-overlay" id="modal-finalize" style="display:none" onclick="closeModal('finalize')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <div class="mh-title">Finalizar Auditoria</div>
+        <div class="mh-sub">Confirme os ajustes a serem aplicados no sistema</div>
+      </div>
+      <div class="modal-close" onclick="closeModal('finalize')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--red-light);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;border-left:3px solid var(--red)">
+        <div style="font-size:12px;font-weight:700;color:var(--red);margin-bottom:4px">⚠️ Atenção — Ação Irreversível</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.5">Os dados do sistema serão atualizados com base na coleta. Esta ação gerará um relatório de auditoria e não pode ser desfeita.</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:var(--radius-sm);font-size:12px">
+          <span style="color:var(--text-secondary)">Títulos com ajuste de baixa</span>
+          <span style="font-weight:700;color:var(--red)">5 títulos (−79 exemplares)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:var(--radius-sm);font-size:12px">
+          <span style="color:var(--text-secondary)">Títulos com ajuste de acréscimo</span>
+          <span style="font-weight:700;color:var(--yellow)">2 títulos (+3 exemplares)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:9px 12px;background:var(--bg);border-radius:var(--radius-sm);font-size:12px">
+          <span style="color:var(--text-secondary)">Títulos sem alteração</span>
+          <span style="font-weight:700;color:var(--green)">11 títulos</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('finalize')">Cancelar</button>
+      <button class="btn btn-red" onclick="closeModal('finalize');showToast('Auditoria finalizada! Relatório gerado.')">Confirmar e Aplicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EXPORT -->
+<div class="modal-overlay" id="modal-export" style="display:none" onclick="closeModal('export')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <div class="mh-title">Exportar Relatório</div>
+        <div class="mh-sub">Escolha o formato e o escopo do relatório</div>
+      </div>
+      <div class="modal-close" onclick="closeModal('export')">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Formato</label>
+        <select class="form-input"><option>CSV — Planilha de Dados</option><option>PDF — Relatório Formatado</option><option>XLSX — Excel</option></select>
+      </div>
+      <div class="form-group">
+        <label>Escopo</label>
+        <select class="form-input"><option>Todos os títulos auditados</option><option>Apenas divergências</option><option>Apenas conformes</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('export')">Cancelar</button>
+      <button class="btn btn-blue" onclick="closeModal('export');showToast('Relatório exportado com sucesso!')">Exportar</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast" style="display:none">
   <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1431,39 +1887,162 @@
 </div>
 
 <script>
+  // ── NAVIGATION ──
   function navigate(page) {
     document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
     document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
 
-    const navItems = document.querySelectorAll('.nav-item');
     const pages = ['painel','alunos','livros','configuracoes'];
     const idx = pages.indexOf(page);
-    if (idx >= 0) navItems[idx].classList.add('active');
+    if (idx >= 0) document.querySelectorAll('.nav-item')[idx].classList.add('active');
 
     const target = document.getElementById('page-' + page);
     if (target) target.classList.add('active');
+
+    // Toggle topbar mode
+    const defaultBar = document.getElementById('topbar-default');
+    const livrosBar  = document.getElementById('topbar-livros');
+    if (page === 'livros') {
+      defaultBar.style.display = 'none';
+      livrosBar.style.display  = 'flex';
+    } else {
+      defaultBar.style.display = 'flex';
+      livrosBar.style.display  = 'none';
+    }
   }
 
+  // ── TOAST ──
   let toastTimer;
   function showToast(msg) {
     const t = document.getElementById('toast');
     document.getElementById('toast-msg').textContent = msg;
     t.style.display = 'flex';
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2500);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2800);
   }
 
-  function selectBook(title, author, isbn, cat, sistema, fisico, status, conservacao, demanda, local) {
-    document.querySelectorAll('#page-livros tbody tr').forEach(r => r.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
+  // ── AUDIT TABLE DATA ──
+  const books = [
+    { title: 'Fundamentos da Física I',  isbn: '978-85-216-3035-7', cat: 'Acadêmico',  sys: 25, col: 22, obs: '3 não localizados' },
+    { title: 'Cálculo Vol 2',            isbn: '978-85-359-0011-5', cat: 'Acadêmico',  sys: 30, col: 24, obs: '6 exemplares ausentes' },
+    { title: 'Termodinâmica Aplicada',   isbn: '978-85-216-4102-3', cat: 'Engenharia', sys: 18, col: 14, obs: '2 com dano, 2 ausentes' },
+    { title: 'Química Orgânica II',      isbn: '978-85-216-5233-1', cat: 'Acadêmico',  sys: 20, col: 17, obs: '3 não localizados' },
+    { title: 'Microeconomia',            isbn: '978-85-359-2245-0', cat: 'Economia',   sys: 12, col: 9,  obs: '3 sem registro de saída' },
+    { title: 'O Capital, Vol 1',         isbn: '978-85-359-5678-9', cat: 'Economia',   sys: 15, col: 16, obs: 'Exemplar não registrado' },
+    { title: 'Sociologia Geral',         isbn: '978-85-359-8871-2', cat: 'Humanas',    sys: 9,  col: 11, obs: '2 sem registro' },
+    { title: 'A República',             isbn: '978-85-359-0232-4', cat: 'Filosofia',  sys: 12, col: 12, obs: '' },
+    { title: 'Cem Anos de Solidão',      isbn: '978-85-359-1234-5', cat: 'Literatura', sys: 8,  col: 8,  obs: '' },
+    { title: 'Dom Quixote',             isbn: '978-85-359-7741-9', cat: 'Literatura', sys: 6,  col: 6,  obs: '' },
+    { title: 'Mecânica dos Sólidos',     isbn: '978-85-216-6100-5', cat: 'Engenharia', sys: 14, col: 14, obs: '' },
+    { title: 'Álgebra Linear',          isbn: '978-85-216-2201-7', cat: 'Acadêmico',  sys: 22, col: 22, obs: '' },
+    { title: 'Física Quântica Moderna',  isbn: '978-85-216-9100-8', cat: 'Acadêmico',  sys: 10, col: 10, obs: '' },
+    { title: 'Direito Constitucional',   isbn: '978-85-359-4430-3', cat: 'Direito',    sys: 16, col: 16, obs: '' },
+    { title: 'Filosofia da Ciência',     isbn: '978-85-359-3321-5', cat: 'Filosofia',  sys: 7,  col: 7,  obs: '' },
+    { title: 'Sistemas Operacionais',    isbn: '978-85-216-8811-4', cat: 'TI',         sys: 11, col: 11, obs: '' },
+    { title: 'Banco de Dados Avançado',  isbn: '978-85-216-7720-9', cat: 'TI',         sys: 9,  col: 9,  obs: '' },
+    { title: 'Resistência dos Materiais',isbn: '978-85-216-1190-5', cat: 'Engenharia', sys: 19, col: 19, obs: '' },
+  ];
 
-    document.getElementById('dp-title').textContent = title;
-    document.getElementById('dp-author').textContent = 'Autor: ' + author;
-    document.getElementById('dp-conservacao').textContent = conservacao;
-    document.getElementById('dp-demanda').textContent = demanda;
-    document.getElementById('dp-local').textContent = local;
+  function getStatus(sys, col) {
+    const d = col - sys;
+    if (d === 0) return { label: 'Conforme', cls: 's-ok',     row: 'row-ok' };
+    if (d < 0)   return { label: 'Déficit',  cls: 's-div',    row: 'row-div' };
+    return             { label: 'Excedente', cls: 's-excess', row: 'row-excess' };
+  }
 
-    showToast(title + ' selecionado');
+  function renderTable(data) {
+    const tbody = document.getElementById('table-body');
+    tbody.innerHTML = data.map(b => {
+      const diff = b.col - b.sys;
+      const st = getStatus(b.sys, b.col);
+      const diffHTML = diff === 0
+        ? `<span class="diff-zero">—</span>`
+        : diff < 0
+          ? `<span class="diff-neg">${diff}</span>`
+          : `<span class="diff-pos">+${diff}</span>`;
+      return `
+        <tr class="${st.row}" onclick="rowClick('${b.title.replace(/'/g,"\\'")}',${b.sys},${b.col},'${b.obs.replace(/'/g,"\\'")}')">
+          <td style="font-weight:600;font-size:12.5px">${b.title}</td>
+          <td class="mono">${b.isbn}</td>
+          <td><span class="cat">${b.cat}</span></td>
+          <td style="text-align:center"><span class="sys-val">${b.sys}</span></td>
+          <td style="text-align:center"><span class="col-val">${b.col}</span></td>
+          <td style="text-align:center"><div class="diff-cell" style="justify-content:center">${diffHTML}</div></td>
+          <td><span class="status ${st.cls}">${st.label}</span></td>
+          <td><a style="font-size:11.5px;font-weight:700;color:var(--red);cursor:pointer" onclick="event.stopPropagation();showToast('Revisão iniciada: ${b.title.replace(/'/g,"\\'")}')">${diff !== 0 ? 'Revisar' : 'Ver'}</a></td>
+        </tr>`;
+    }).join('');
+  }
+
+  renderTable(books);
+
+  function filterTable(q) {
+    const filtered = books.filter(b => b.title.toLowerCase().includes(q.toLowerCase()) || b.isbn.includes(q));
+    renderTable(filtered);
+  }
+
+  function setFilter(el, type) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    let data = books;
+    if (type === 'div')    data = books.filter(b => b.col < b.sys);
+    if (type === 'ok')     data = books.filter(b => b.col === b.sys);
+    if (type === 'excess') data = books.filter(b => b.col > b.sys);
+    renderTable(data);
+  }
+
+  function rowClick(title, sys, col, obs) {
+    const diff = col - sys;
+    const msg = diff === 0
+      ? `${title} — Conforme (${sys} exemplares)`
+      : diff < 0
+        ? `${title} — Déficit de ${Math.abs(diff)} exemplar(es). ${obs}`
+        : `${title} — Excedente de ${diff} exemplar(es). ${obs}`;
+    showToast(msg);
+  }
+
+  // ── MODALS ──
+  function openModal(id)  { document.getElementById('modal-' + id).style.display = 'flex'; }
+  function closeModal(id) { document.getElementById('modal-' + id).style.display = 'none'; }
+
+  // ── QUICK SCAN ──
+  function quickScan() {
+    const isbn = document.getElementById('isbn-input').value.trim();
+    const book = books.find(b => b.isbn === isbn);
+    if (book) {
+      document.getElementById('qty-input').value = book.col;
+      showToast(`ISBN encontrado: ${book.title}`);
+    } else if (isbn) {
+      showToast('ISBN não localizado no sistema.');
+    }
+  }
+
+  function submitScan() {
+    const isbn = document.getElementById('isbn-input').value.trim();
+    const qty  = document.getElementById('qty-input').value;
+    const obs  = document.getElementById('obs-input').value;
+    if (!isbn || !qty) { showToast('Preencha ISBN e quantidade.'); return; }
+    addLog(isbn, qty, obs);
+    document.getElementById('isbn-input').value = '';
+    document.getElementById('qty-input').value  = '';
+    document.getElementById('obs-input').value  = '';
+    showToast('Coleta registrada com sucesso!');
+  }
+
+  function addLog(isbn, qty, obs) {
+    const list = document.getElementById('log-list');
+    const item = document.createElement('div');
+    item.className = 'log-item';
+    const now = new Date();
+    const time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+    item.innerHTML = `
+      <div class="log-dot" style="background:var(--blue-accent)"></div>
+      <div class="log-info">
+        <div class="lt">ISBN ${isbn} — ${qty} exemplar(es)</div>
+        <div class="ls">${obs || 'Sem observações'}</div>
+      </div>
+      <div class="log-time">${time}</div>`;
+    list.insertBefore(item, list.firstChild);
   }
 </script>
 
