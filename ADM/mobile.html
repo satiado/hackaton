@@ -1,213 +1,754 @@
+cat > /mnt/user-data/outputs/rfid-nfc-scanner.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leitor RFID Biblioteca</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0A0A0F">
+<title>NFC Scanner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0A0A0F;
+  --surface:#13131A;
+  --surface2:#1C1C26;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --text:#F0F0F5;
+  --muted:#7A7A90;
+  --accent:#4AE8A0;
+  --accent2:#3BC87E;
+  --accent-dim:rgba(74,232,160,0.12);
+  --red:#FF5F5F;
+  --red-dim:rgba(255,95,95,0.12);
+  --amber:#F5A623;
+  --amber-dim:rgba(245,166,35,0.12);
+  --blue:#5B8DEF;
+  --blue-dim:rgba(91,141,239,0.12);
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'DM Sans',sans-serif;
 }
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden}
+body{display:flex;flex-direction:column;min-height:100vh}
 
-body{
-    background:#f4f4f4;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    padding:20px;
-}
+/* HEADER */
+.header{padding:20px 20px 0;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:var(--mono);font-size:14px;font-weight:600;letter-spacing:0.05em;color:var(--accent)}
+.logo span{color:var(--muted);font-weight:400}
+.nfc-status{display:flex;align-items:center;gap:6px;font-size:11px;font-family:var(--mono);color:var(--muted)}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--muted)}
+.status-dot.active{background:var(--accent);animation:blink 1.4s infinite}
+.status-dot.error{background:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 
-.container{
-    width:100%;
-    max-width:400px;
-    background:white;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,.15);
-}
+/* NAV */
+.nav{display:flex;gap:2px;padding:20px 20px 0}
+.nav-btn{flex:1;padding:9px;border-radius:10px;border:none;background:transparent;color:var(--muted);font-size:12px;font-family:var(--sans);font-weight:500;cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.nav-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav-btn.active{background:var(--surface2);color:var(--text)}
+.nav-btn.active svg{stroke:var(--accent)}
 
-h1{
-    text-align:center;
-    margin-bottom:20px;
-    color:#333;
-    font-size:1.5rem;
-}
+/* PAGES */
+.page{display:none;flex:1;padding:20px;flex-direction:column;gap:16px}
+.page.active{display:flex}
 
-input{
-    width:100%;
-    padding:14px;
-    border:1px solid #ccc;
-    border-radius:10px;
-    margin-bottom:15px;
-    font-size:16px;
+/* SCAN PAGE */
+.scan-area{
+  background:var(--surface);border-radius:20px;border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px;gap:16px;position:relative;overflow:hidden;
 }
+.scan-ring{
+  width:120px;height:120px;border-radius:50%;border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;position:relative;transition:all 0.3s;
+}
+.scan-ring::before,.scan-ring::after{
+  content:'';position:absolute;border-radius:50%;border:1.5px solid var(--accent);
+  opacity:0;animation:none;
+}
+.scan-ring::before{width:140px;height:140px}
+.scan-ring::after{width:165px;height:165px}
+.scan-ring.scanning::before{animation:ripple 1.8s ease-out infinite}
+.scan-ring.scanning::after{animation:ripple 1.8s ease-out 0.6s infinite}
+.scan-ring.success{border-color:var(--accent);background:var(--accent-dim)}
+.scan-ring.error{border-color:var(--red);background:var(--red-dim)}
+@keyframes ripple{0%{transform:scale(0.85);opacity:0.6}100%{transform:scale(1.15);opacity:0}}
+.scan-icon{width:48px;height:48px;stroke:var(--muted);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:all 0.3s}
+.scan-ring.scanning .scan-icon{stroke:var(--accent)}
+.scan-ring.success .scan-icon{stroke:var(--accent)}
+.scan-ring.error .scan-icon{stroke:var(--red)}
+.scan-label{font-size:15px;font-weight:500;color:var(--text);text-align:center}
+.scan-sub{font-size:12px;color:var(--muted);text-align:center;line-height:1.5}
+.scan-tag{font-family:var(--mono);font-size:11px;background:var(--accent-dim);color:var(--accent);padding:4px 10px;border-radius:6px;display:none}
 
-button{
-    width:100%;
-    padding:14px;
-    border:none;
-    background:#2d7ef7;
-    color:white;
-    border-radius:10px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:bold;
-}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:14px;font-family:var(--sans);font-weight:500;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:scale(0.98)}
+.btn-primary{background:var(--accent);color:#0A0A0F}
+.btn-primary:hover{background:var(--accent2)}
+.btn-primary:disabled{background:var(--surface2);color:var(--muted);cursor:not-allowed;transform:none}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border2)}
+.btn-secondary:hover{background:var(--surface);border-color:var(--border2)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,95,95,0.2)}
 
-button:hover{
-    opacity:.9;
-}
+/* CARDS */
+.card{background:var(--surface);border-radius:14px;border:1px solid var(--border);padding:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-title{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--mono)}
 
-.card{
-    margin-top:20px;
-    background:#f9f9f9;
-    padding:15px;
-    border-radius:10px;
-    display:none;
-}
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase;font-family:var(--mono)}
+.form-input{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:var(--sans);outline:none;transition:border-color 0.15s;width:100%}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--muted)}
+select.form-input{cursor:pointer}
+select.form-input option{background:var(--surface2)}
 
-.card h2{
-    margin-bottom:10px;
-    color:#2d7ef7;
-}
+/* RECORD LIST */
+.record-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color 0.15s}
+.record-item:active{background:var(--surface2)}
+.record-item:hover{border-color:var(--border2)}
+.record-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px}
+.record-info{flex:1;min-width:0}
+.record-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.record-meta{font-size:11px;color:var(--muted);margin-top:2px;font-family:var(--mono)}
+.record-badge{font-size:10px;padding:3px 7px;border-radius:5px;font-family:var(--mono);white-space:nowrap}
+.badge-green{background:var(--accent-dim);color:var(--accent)}
+.badge-amber{background:var(--amber-dim);color:var(--amber)}
+.badge-blue{background:var(--blue-dim);color:var(--blue)}
+.badge-red{background:var(--red-dim);color:var(--red)}
+.chevron{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
-.info{
-    margin:8px 0;
-    font-size:16px;
-}
+/* DETAIL MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:0;width:100%;max-height:88vh;overflow-y:auto;transform:translateY(20px);transition:transform 0.25s;border-top:1px solid var(--border2)}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0}
+.modal-body{padding:20px}
+.modal-title{font-size:17px;font-weight:500;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.detail-row{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-key{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.detail-val{font-size:13px;color:var(--text);text-align:right;max-width:60%;word-break:break-all}
+.detail-val.mono{font-family:var(--mono);font-size:11px}
 
-.status{
-    margin-top:15px;
-    text-align:center;
-    font-weight:bold;
-}
+/* TAG INFO */
+.tag-info{background:var(--accent-dim);border:1px solid rgba(74,232,160,0.2);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.tag-row{display:flex;justify-content:space-between;font-size:12px}
+.tag-key{color:var(--accent);opacity:0.7;font-family:var(--mono)}
+.tag-val{color:var(--accent);font-family:var(--mono);font-weight:600}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.stat-box{background:var(--surface2);border-radius:12px;padding:14px 12px;text-align:center}
+.stat-num{font-size:22px;font-weight:600;font-family:var(--mono);color:var(--text)}
+.stat-label{font-size:10px;color:var(--muted);margin-top:3px;font-family:var(--mono)}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:48px 20px;color:var(--muted);text-align:center}
+.empty svg{width:40px;height:40px;stroke:var(--border2);fill:none;stroke-width:1.5;stroke-linecap:round}
+.empty p{font-size:13px;line-height:1.5}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(10px);background:#1E1E2E;border:1px solid var(--border2);border-radius:10px;padding:10px 18px;font-size:13px;color:var(--text);z-index:300;opacity:0;transition:all 0.25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* SECTION TITLE */
+.section-label{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.07em;font-family:var(--mono)}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:8px}
+.filter-chip{padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:transparent;color:var(--muted);font-size:12px;font-family:var(--sans);cursor:pointer;transition:all 0.15s;white-space:nowrap}
+.filter-chip.active{background:var(--surface2);color:var(--text);border-color:var(--accent);color:var(--accent)}
+
+/* SEARCH */
+.search-wrap{position:relative}
+.search-wrap input{padding-left:36px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+
+/* COMPAT NOTICE */
+.compat-notice{background:var(--amber-dim);border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:14px;font-size:12px;color:var(--amber);line-height:1.6;display:none}
+.compat-notice.show{display:block}
 </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>📚 Biblioteca RFID</h1>
-
-    <input
-        type="text"
-        id="rfid"
-        placeholder="Aproxime ou digite o RFID"
-    >
-
-    <button onclick="lerRFID()">
-        Ler Livro
-    </button>
-
-    <div class="card" id="resultado">
-        <h2>Livro Encontrado</h2>
-
-        <div class="info">
-            <strong>ID:</strong>
-            <span id="idLivro"></span>
-        </div>
-
-        <div class="info">
-            <strong>Livro:</strong>
-            <span id="nomeLivro"></span>
-        </div>
-
-        <div class="info">
-            <strong>Tipo:</strong>
-            <span id="tipoLivro"></span>
-        </div>
-    </div>
-
-    <div class="status" id="status"></div>
+<div class="header">
+  <div class="logo">NFC<span>/scan</span></div>
+  <div class="nfc-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">verificando...</span>
+  </div>
 </div>
 
+<nav class="nav">
+  <button class="nav-btn active" onclick="showPage('scan',this)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2v2h-2zm4 0h3v3h-3zm-4 4h3v3h-3z"/></svg>
+    Escanear
+  </button>
+  <button class="nav-btn" onclick="showPage('records',this)">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/></svg>
+    Registros
+  </button>
+  <button class="nav-btn" onclick="showPage('settings',this)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+    Config
+  </button>
+</nav>
+
+<!-- SCAN PAGE -->
+<div class="page active" id="page-scan">
+  <div class="compat-notice" id="compatNotice">
+    ⚠️ <strong>Web NFC</strong> requer Android + Chrome 89+. No iOS, abra no Safari com suporte a NFC habilitado. Em caso de erro, use a entrada manual abaixo.
+  </div>
+
+  <div class="scan-area">
+    <div class="scan-ring" id="scanRing">
+      <svg class="scan-icon" viewBox="0 0 24 24">
+        <path d="M6 5H4a2 2 0 0 0-2 2v2M18 5h2a2 2 0 0 1 2 2v2M6 19H4a2 2 0 0 1-2-2v-2M18 19h2a2 2 0 0 0 2-2v-2"/>
+        <rect x="8" y="8" width="8" height="8" rx="1.5"/>
+      </svg>
+    </div>
+    <div class="scan-label" id="scanLabel">Pronto para escanear</div>
+    <div class="scan-sub" id="scanSub">Aproxime o celular do adesivo NFC/RFID</div>
+    <div class="scan-tag" id="scanTag"></div>
+  </div>
+
+  <button class="btn btn-primary" id="btnScan" onclick="startScan()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 8v4l3 3"/></svg>
+    Iniciar leitura NFC
+  </button>
+
+  <div style="display:flex;align-items:center;gap:10px">
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+    <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">ou entrada manual</span>
+    <div style="flex:1;height:1px;background:var(--border)"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">Registrar manualmente</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="form-group">
+        <label class="form-label">ID / Código RFID</label>
+        <input class="form-input" id="manualId" placeholder="ex: RF-00482 ou UID do tag" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nome / Descrição</label>
+        <input class="form-input" id="manualName" placeholder="ex: Livro de Física Vol.1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categoria</label>
+        <select class="form-input" id="manualCat">
+          <option value="geral">Geral</option>
+          <option value="livro">📚 Livro</option>
+          <option value="equipamento">🔧 Equipamento</option>
+          <option value="documento">📄 Documento</option>
+          <option value="produto">📦 Produto</option>
+          <option value="outro">🏷️ Outro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Observação (opcional)</label>
+        <input class="form-input" id="manualNote" placeholder="ex: Prateleira A3">
+      </div>
+      <button class="btn btn-secondary" onclick="saveManual()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17,21 17,13 7,13 7,21"/><polyline points="7,3 7,8 15,8"/></svg>
+        Salvar registro
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- RECORDS PAGE -->
+<div class="page" id="page-records">
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num" id="statTotal">0</div><div class="stat-label">TOTAL</div></div>
+    <div class="stat-box"><div class="stat-num" id="statToday">0</div><div class="stat-label">HOJE</div></div>
+    <div class="stat-box"><div class="stat-num" id="statCats">0</div><div class="stat-label">TIPOS</div></div>
+  </div>
+
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input class="form-input" id="searchInput" placeholder="Buscar por nome ou ID..." oninput="renderRecords()">
+  </div>
+
+  <div class="filter-bar" id="filterBar" style="overflow-x:auto;padding-bottom:2px"></div>
+
+  <div id="recordsList" style="display:flex;flex-direction:column;gap:10px"></div>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div class="page" id="page-settings">
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px">Banco de dados local</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-secondary" onclick="exportData()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar JSON
+      </button>
+      <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17,8 12,3 7,8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importar JSON
+      </button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="btn btn-danger" onclick="clearAll()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        Limpar todos os registros
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px">Sobre o NFC Web</div>
+    <div style="font-size:13px;color:var(--muted);line-height:1.7">
+      <p style="margin-bottom:8px">Esta app usa a <strong style="color:var(--text)">Web NFC API</strong> para leitura de tags RFID/NFC diretamente pelo browser, sem instalar nada.</p>
+      <p style="margin-bottom:8px"><strong style="color:var(--accent)">Compatibilidade:</strong></p>
+      <div style="display:flex;flex-direction:column;gap:6px;font-family:var(--mono);font-size:11px">
+        <div style="display:flex;justify-content:space-between"><span>Android + Chrome 89+</span><span style="color:var(--accent)">✓ Suportado</span></div>
+        <div style="display:flex;justify-content:space-between"><span>iOS / Safari</span><span style="color:var(--red)">✗ Limitado</span></div>
+        <div style="display:flex;justify-content:space-between"><span>Desktop Chrome</span><span style="color:var(--amber)">~ Sem NFC físico</span></div>
+      </div>
+      <p style="margin-top:10px">Os dados ficam salvos no <strong style="color:var(--text)">localStorage</strong> do seu celular — funcionam offline e persistem entre sessões.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px">Informações do app</div>
+    <div class="detail-row"><span class="detail-key">versão</span><span class="detail-val mono">1.0.0</span></div>
+    <div class="detail-row"><span class="detail-key">storage</span><span class="detail-val mono">localStorage</span></div>
+    <div class="detail-row"><span class="detail-key">api</span><span class="detail-val mono">Web NFC (NDEFReader)</span></div>
+    <div class="detail-row"><span class="detail-key">registros</span><span class="detail-val mono" id="settingsCount">0</span></div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
+        <div style="font-size:28px" id="detailIcon">🏷️</div>
+        <div style="flex:1">
+          <div class="modal-title" id="detailName">—</div>
+          <div class="modal-sub" id="detailId">—</div>
+        </div>
+      </div>
+      <div class="tag-info" id="detailTagInfo"></div>
+      <div id="detailFields"></div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-secondary" style="flex:1" onclick="editRecord()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Editar
+        </button>
+        <button class="btn btn-danger" style="flex:1" onclick="deleteRecord()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal" onclick="closeEditModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-body">
+      <div class="modal-title" style="margin-bottom:16px">Editar registro</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="form-group"><label class="form-label">Nome / Descrição</label><input class="form-input" id="editName"></div>
+        <div class="form-group"><label class="form-label">Categoria</label>
+          <select class="form-input" id="editCat">
+            <option value="geral">Geral</option>
+            <option value="livro">📚 Livro</option>
+            <option value="equipamento">🔧 Equipamento</option>
+            <option value="documento">📄 Documento</option>
+            <option value="produto">📦 Produto</option>
+            <option value="outro">🏷️ Outro</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Observação</label><input class="form-input" id="editNote"></div>
+        <button class="btn btn-primary" onclick="saveEdit()">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
+const DB_KEY = 'nfc_scanner_db';
+let records = [];
+let currentRecord = null;
+let nfcReader = null;
+let scanning = false;
+let activeFilter = 'all';
 
-// Banco local
-const livros = [
-{
-    id: 1,
-    rfid: "A1B2C3D4",
-    nome: "Dom Casmurro",
-    tipo: "Romance"
-},
-{
-    id: 2,
-    rfid: "E5F6G7H8",
-    nome: "Algoritmos",
-    tipo: "Tecnologia"
-},
-{
-    id: 3,
-    rfid: "I9J0K1L2",
-    nome: "O Pequeno Príncipe",
-    tipo: "Infantil"
-}
-];
-
-function lerRFID(){
-
-    const codigo = document
-        .getElementById("rfid")
-        .value
-        .trim()
-        .toUpperCase();
-
-    const livro = livros.find(
-        item => item.rfid === codigo
-    );
-
-    const resultado = document.getElementById("resultado");
-    const status = document.getElementById("status");
-
-    if(livro){
-
-        document.getElementById("idLivro").textContent = livro.id;
-        document.getElementById("nomeLivro").textContent = livro.nome;
-        document.getElementById("tipoLivro").textContent = livro.tipo;
-
-        resultado.style.display = "block";
-
-        status.innerHTML = "✅ Livro identificado com sucesso";
-
-        // Salva histórico local
-        let historico =
-            JSON.parse(localStorage.getItem("historicoRFID")) || [];
-
-        historico.push({
-            data: new Date().toLocaleString(),
-            ...livro
-        });
-
-        localStorage.setItem(
-            "historicoRFID",
-            JSON.stringify(historico)
-        );
-
-    }else{
-
-        resultado.style.display = "none";
-
-        status.innerHTML =
-            "❌ RFID não encontrado no banco local";
-    }
+// INIT
+function init() {
+  loadDB();
+  checkNFC();
+  renderRecords();
+  updateStats();
 }
 
-// Enter também lê
-document
-.getElementById("rfid")
-.addEventListener("keypress", function(e){
+function loadDB() {
+  try { records = JSON.parse(localStorage.getItem(DB_KEY)) || []; } catch(e) { records = []; }
+}
+function saveDB() {
+  localStorage.setItem(DB_KEY, JSON.stringify(records));
+  updateStats();
+  renderRecords();
+}
 
-    if(e.key === "Enter"){
-        lerRFID();
+// NFC CHECK
+function checkNFC() {
+  const dot = document.getElementById('statusDot');
+  const txt = document.getElementById('statusText');
+  if ('NDEFReader' in window) {
+    dot.className = 'status-dot active';
+    txt.textContent = 'NFC disponível';
+  } else {
+    dot.className = 'status-dot error';
+    txt.textContent = 'NFC indisponível';
+    document.getElementById('compatNotice').classList.add('show');
+    document.getElementById('btnScan').disabled = true;
+    document.getElementById('btnScan').textContent = 'NFC não suportado neste dispositivo';
+  }
+}
+
+// SCAN
+async function startScan() {
+  if (scanning) { stopScan(); return; }
+  const ring = document.getElementById('scanRing');
+  const label = document.getElementById('scanLabel');
+  const sub = document.getElementById('scanSub');
+  const btn = document.getElementById('btnScan');
+
+  try {
+    nfcReader = new NDEFReader();
+    await nfcReader.scan();
+    scanning = true;
+
+    ring.classList.add('scanning');
+    label.textContent = 'Aguardando tag...';
+    sub.textContent = 'Aproxime o celular do adesivo NFC';
+    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg> Parar leitura`;
+    btn.className = 'btn btn-secondary';
+
+    nfcReader.addEventListener('reading', ({ message, serialNumber }) => {
+      scanning = false;
+      ring.classList.remove('scanning');
+      btn.className = 'btn btn-primary';
+      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 8v4l3 3"/></svg> Iniciar leitura NFC`;
+      handleNFCRead(message, serialNumber);
+    });
+
+    nfcReader.addEventListener('readingerror', () => {
+      stopScan();
+      setError('Erro ao ler a tag. Tente novamente.');
+    });
+
+  } catch(err) {
+    stopScan();
+    if (err.name === 'NotAllowedError') setError('Permissão negada. Habilite NFC nas configurações.');
+    else if (err.name === 'NotSupportedError') setError('NFC não suportado neste dispositivo.');
+    else setError('Erro: ' + err.message);
+  }
+}
+
+function stopScan() {
+  scanning = false;
+  const ring = document.getElementById('scanRing');
+  const btn = document.getElementById('btnScan');
+  ring.classList.remove('scanning');
+  btn.className = 'btn btn-primary';
+  btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 8v4l3 3"/></svg> Iniciar leitura NFC`;
+  document.getElementById('scanLabel').textContent = 'Pronto para escanear';
+  document.getElementById('scanSub').textContent = 'Aproxime o celular do adesivo NFC/RFID';
+}
+
+function handleNFCRead(message, serialNumber) {
+  const ring = document.getElementById('scanRing');
+  const label = document.getElementById('scanLabel');
+  const sub = document.getElementById('scanSub');
+  const tagEl = document.getElementById('scanTag');
+
+  ring.classList.add('success');
+  label.textContent = 'Tag detectada!';
+  tagEl.textContent = serialNumber || 'UID desconhecido';
+  tagEl.style.display = 'inline-block';
+
+  // Parse NDEF records
+  let ndefText = '';
+  let ndefUrl = '';
+  if (message && message.records) {
+    for (const rec of message.records) {
+      if (rec.recordType === 'text') {
+        const dec = new TextDecoder(rec.encoding || 'utf-8');
+        ndefText = dec.decode(rec.data);
+      } else if (rec.recordType === 'url') {
+        const dec = new TextDecoder();
+        ndefUrl = dec.decode(rec.data);
+      }
     }
+  }
 
-});
+  sub.textContent = ndefText ? `Conteúdo: ${ndefText}` : 'Tag sem dados NDEF';
+
+  // Save record
+  const exists = records.find(r => r.uid === serialNumber);
+  if (exists) {
+    exists.lastSeen = new Date().toISOString();
+    exists.scanCount = (exists.scanCount || 1) + 1;
+    saveDB();
+    showToast('Tag já registrada — atualizado');
+    setTimeout(() => { ring.classList.remove('success'); tagEl.style.display='none'; label.textContent='Pronto para escanear'; sub.textContent='Aproxime o celular do adesivo NFC/RFID'; }, 3000);
+    return;
+  }
+
+  const record = {
+    id: Date.now().toString(),
+    uid: serialNumber || ('MANUAL-' + Date.now()),
+    name: ndefText || (serialNumber ? 'Tag ' + serialNumber.slice(-6).toUpperCase() : 'Nova tag'),
+    category: 'geral',
+    note: ndefUrl || '',
+    ndefContent: ndefText,
+    ndefUrl: ndefUrl,
+    createdAt: new Date().toISOString(),
+    lastSeen: new Date().toISOString(),
+    scanCount: 1,
+    source: 'nfc',
+  };
+
+  records.unshift(record);
+  saveDB();
+  showToast('✓ Tag registrada com sucesso!');
+
+  setTimeout(() => {
+    ring.classList.remove('success');
+    tagEl.style.display = 'none';
+    label.textContent = 'Pronto para escanear';
+    sub.textContent = 'Aproxime o celular do adesivo NFC/RFID';
+  }, 3000);
+}
+
+function setError(msg) {
+  const ring = document.getElementById('scanRing');
+  ring.classList.remove('scanning');
+  ring.classList.add('error');
+  document.getElementById('scanLabel').textContent = 'Erro de leitura';
+  document.getElementById('scanSub').textContent = msg;
+  setTimeout(() => { ring.classList.remove('error'); document.getElementById('scanLabel').textContent='Pronto para escanear'; document.getElementById('scanSub').textContent='Aproxime o celular do adesivo NFC/RFID'; }, 3500);
+}
+
+// MANUAL SAVE
+function saveManual() {
+  const id = document.getElementById('manualId').value.trim();
+  const name = document.getElementById('manualName').value.trim();
+  const cat = document.getElementById('manualCat').value;
+  const note = document.getElementById('manualNote').value.trim();
+  if (!id || !name) { showToast('Preencha ID e Nome'); return; }
+
+  const existing = records.find(r => r.uid === id);
+  if (existing) { showToast('ID já cadastrado'); return; }
+
+  records.unshift({
+    id: Date.now().toString(),
+    uid: id,
+    name: name,
+    category: cat,
+    note: note,
+    createdAt: new Date().toISOString(),
+    lastSeen: new Date().toISOString(),
+    scanCount: 1,
+    source: 'manual',
+  });
+  saveDB();
+  document.getElementById('manualId').value='';
+  document.getElementById('manualName').value='';
+  document.getElementById('manualNote').value='';
+  document.getElementById('manualCat').value='geral';
+  showToast('✓ Registro salvo');
+}
+
+// RENDER RECORDS
+const catIcon = {geral:'🏷️',livro:'📚',equipamento:'🔧',documento:'📄',produto:'📦',outro:'🏷️'};
+const catColor = {geral:'badge-gray',livro:'badge-blue',equipamento:'badge-amber',documento:'badge-green',produto:'badge-amber',outro:'badge-gray'};
+const catBg = {geral:'rgba(122,122,144,0.12)',livro:'rgba(91,141,239,0.12)',equipamento:'rgba(245,166,35,0.12)',documento:'rgba(74,232,160,0.12)',produto:'rgba(245,166,35,0.12)',outro:'rgba(122,122,144,0.12)'};
+
+function renderRecords() {
+  const q = (document.getElementById('searchInput')?.value||'').toLowerCase();
+  let filtered = records.filter(r =>
+    (!q || r.name.toLowerCase().includes(q) || r.uid.toLowerCase().includes(q)) &&
+    (activeFilter === 'all' || r.category === activeFilter)
+  );
+
+  const list = document.getElementById('recordsList');
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24"><path d="M6 5H4a2 2 0 0 0-2 2v2M18 5h2a2 2 0 0 1 2 2v2M6 19H4a2 2 0 0 1-2-2v-2M18 19h2a2 2 0 0 0 2-2v-2"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>
+      <p>${q || activeFilter!=='all' ? 'Nenhum resultado encontrado' : 'Nenhum registro ainda.\nEscaneie ou cadastre uma tag.'}</p>
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(r => {
+    const d = new Date(r.createdAt);
+    const dateStr = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="record-item" onclick="openDetail('${r.id}')">
+      <div class="record-icon" style="background:${catBg[r.category]||catBg.geral}">${catIcon[r.category]||'🏷️'}</div>
+      <div class="record-info">
+        <div class="record-name">${r.name}</div>
+        <div class="record-meta">${r.uid.length > 20 ? r.uid.substring(0,20)+'…' : r.uid} · ${dateStr}</div>
+      </div>
+      <span class="record-badge ${catColor[r.category]||'badge-gray'}">${r.source==='nfc'?'NFC':'manual'}</span>
+      <svg class="chevron" viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></svg>
+    </div>`;
+  }).join('');
+
+  // Filter chips
+  const cats = ['all', ...new Set(records.map(r=>r.category))];
+  const bar = document.getElementById('filterBar');
+  bar.innerHTML = cats.map(c => {
+    const label = c==='all' ? 'Todos' : (catIcon[c]||'') + ' ' + c.charAt(0).toUpperCase()+c.slice(1);
+    return `<button class="filter-chip ${c===activeFilter?'active':''}" onclick="setFilter('${c}')">${label}</button>`;
+  }).join('');
+}
+
+function setFilter(f) { activeFilter = f; renderRecords(); }
+
+function updateStats() {
+  const today = new Date().toDateString();
+  document.getElementById('statTotal').textContent = records.length;
+  document.getElementById('statToday').textContent = records.filter(r => new Date(r.createdAt).toDateString()===today).length;
+  document.getElementById('statCats').textContent = new Set(records.map(r=>r.category)).size;
+  document.getElementById('settingsCount').textContent = records.length;
+}
+
+// DETAIL MODAL
+function openDetail(id) {
+  currentRecord = records.find(r => r.id === id);
+  if (!currentRecord) return;
+  document.getElementById('detailIcon').textContent = catIcon[currentRecord.category]||'🏷️';
+  document.getElementById('detailName').textContent = currentRecord.name;
+  document.getElementById('detailId').textContent = currentRecord.uid;
+  document.getElementById('detailTagInfo').innerHTML = `
+    <div class="tag-row"><span class="tag-key">UID</span><span class="tag-val">${currentRecord.uid}</span></div>
+    <div class="tag-row"><span class="tag-key">fonte</span><span class="tag-val">${currentRecord.source}</span></div>
+    <div class="tag-row"><span class="tag-key">leituras</span><span class="tag-val">${currentRecord.scanCount||1}</span></div>`;
+  const d1 = new Date(currentRecord.createdAt);
+  const d2 = new Date(currentRecord.lastSeen);
+  const fmt = d => d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('detailFields').innerHTML = `
+    <div class="detail-row"><span class="detail-key">categoria</span><span class="detail-val">${catIcon[currentRecord.category]||''} ${currentRecord.category}</span></div>
+    ${currentRecord.note ? `<div class="detail-row"><span class="detail-key">observação</span><span class="detail-val">${currentRecord.note}</span></div>` : ''}
+    ${currentRecord.ndefContent ? `<div class="detail-row"><span class="detail-key">conteúdo NDEF</span><span class="detail-val">${currentRecord.ndefContent}</span></div>` : ''}
+    ${currentRecord.ndefUrl ? `<div class="detail-row"><span class="detail-key">URL NDEF</span><span class="detail-val mono">${currentRecord.ndefUrl}</span></div>` : ''}
+    <div class="detail-row"><span class="detail-key">registrado em</span><span class="detail-val">${fmt(d1)}</span></div>
+    <div class="detail-row"><span class="detail-key">última leitura</span><span class="detail-val">${fmt(d2)}</span></div>`;
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('detailModal')) document.getElementById('detailModal').classList.remove('open');
+}
+function closeEditModal(e) {
+  if (e.target === document.getElementById('editModal')) document.getElementById('editModal').classList.remove('open');
+}
+
+function editRecord() {
+  if (!currentRecord) return;
+  document.getElementById('editName').value = currentRecord.name;
+  document.getElementById('editCat').value = currentRecord.category;
+  document.getElementById('editNote').value = currentRecord.note||'';
+  document.getElementById('detailModal').classList.remove('open');
+  document.getElementById('editModal').classList.add('open');
+}
+
+function saveEdit() {
+  if (!currentRecord) return;
+  const idx = records.findIndex(r => r.id === currentRecord.id);
+  if (idx === -1) return;
+  records[idx].name = document.getElementById('editName').value.trim() || records[idx].name;
+  records[idx].category = document.getElementById('editCat').value;
+  records[idx].note = document.getElementById('editNote').value.trim();
+  saveDB();
+  document.getElementById('editModal').classList.remove('open');
+  showToast('Registro atualizado');
+}
+
+function deleteRecord() {
+  if (!currentRecord) return;
+  if (!confirm(`Excluir "${currentRecord.name}"?`)) return;
+  records = records.filter(r => r.id !== currentRecord.id);
+  saveDB();
+  document.getElementById('detailModal').classList.remove('open');
+  showToast('Registro excluído');
+  currentRecord = null;
+}
+
+// EXPORT / IMPORT
+function exportData() {
+  const blob = new Blob([JSON.stringify({exported:new Date().toISOString(), count:records.length, records}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `nfc-db-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  showToast('Arquivo exportado');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const imported = data.records || data;
+      if (!Array.isArray(imported)) throw new Error();
+      const before = records.length;
+      imported.forEach(r => { if (!records.find(x => x.id === r.id)) records.push(r); });
+      saveDB();
+      showToast(`${records.length - before} registros importados`);
+    } catch { showToast('Arquivo inválido'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function clearAll() {
+  if (!confirm(`Excluir todos os ${records.length} registros? Esta ação não pode ser desfeita.`)) return;
+  records = [];
+  saveDB();
+  showToast('Banco de dados limpo');
+}
+
+// NAV
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'records') { renderRecords(); updateStats(); }
+  if (id === 'settings') updateStats();
+}
+
+// TOAST
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+init();
 </script>
-
 </body>
 </html>
