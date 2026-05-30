@@ -1,0 +1,236 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+body{
+    background:#f5f6fa;
+}
+
+.container{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:230px;
+    background:#363b53;
+    color:white;
+}
+
+.logo{
+    height:80px;
+    background:#c70f16;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.logo h2{
+    font-size:24px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar li{
+    padding:18px 25px;
+    cursor:pointer;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    transition:.3s;
+}
+
+.sidebar li:hover{
+    background:#474d69;
+}
+
+.sidebar li.active{
+    border-left:4px solid #ff4d4d;
+    background:#41475f;
+}
+
+/* CONTENT */
+
+.content{
+    flex:1;
+}
+
+/* HEADER */
+
+.topbar{
+    background:#c70f16;
+    height:80px;
+    padding:0 30px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    color:white;
+}
+
+.header-info{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.date{
+    display:flex;
+    flex-direction:column;
+    text-align:right;
+}
+
+.date span{
+    font-size:12px;
+}
+
+/* ===== GRID SUPERIOR ===== */
+
+.perfil-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+    padding:20px;
+}
+
+/* ===== CARD ALUNO ===== */
+
+.aluno-card{
+    background:#fff;
+    border-radius:10px;
+    border:1px solid #d9dce4;
+    overflow:hidden;
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:15px 20px;
+
+    border-bottom:1px solid #d9dce4;
+}
+
+.card-header h2{
+    font-size:20px;
+    color:#2f3449;
+}
+
+.btn-bloquear{
+    background:#d73636;
+    color:white;
+
+    border:none;
+    padding:8px 14px;
+
+    border-radius:6px;
+    cursor:pointer;
+
+    font-size:12px;
+    font-weight:600;
+}
+
+.aluno-info{
+    display:flex;
+    gap:30px;
+    padding:25px;
+}
+
+.aluno-info img{
+    width:130px;
+    height:130px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.dados{
+    line-height:2;
+    color:#222;
+}
+
+.dados strong{
+    color:#1d2233;
+}
+
+.notificar{
+    display:block;
+    padding:0 25px 20px;
+    color:#d53b3b;
+    font-size:12px;
+    text-decoration:none;
+}
+
+/* ===== HISTÓRICO ===== */
+
+.historico{
+    background:#fff;
+    border-radius:10px;
+    border:1px solid #d9dce4;
+
+    padding:15px;
+}
+
+.historico h3{
+    margin-bottom:15px;
+    color:#2f3449;
+}
+
+.livro-item{
+    display:flex;
+    gap:12px;
+
+    padding:10px;
+    margin-bottom:12px;
+
+    border:1px solid #d9dce4;
+    border-radius:6px;
+}
+
+.livro-item img{
+    width:55px;
+    height:75px;
+    object-fit:cover;
+}
+
+.livro-item h4{
+    font-size:13px;
+    margin-bottom:4px;
+}
+
+.livro-item p{
+    font-size:11px;
+    color:#666;
+}
+
+.livro-item small{
+    color:#4f6db7;
+}
+
+/* ===== RESPONSIVO ===== */
+
+@media(max-width:1000px){
+
+    .perfil-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:700px){
+
+    .aluno-info{
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+    }
+
+}

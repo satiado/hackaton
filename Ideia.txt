@@ -47,3 +47,8 @@
     
 - Tinkercad Simulação:
     https://www.tinkercad.com/things/8IYrEGt3x0e/editel?returnTo=%2Fdashboard%2Fdesigns%2Fcircuits
+
+- Aluno quer entrar na biblioteca, scan facial processa se aluno está em banco de dados, se estiver, um esp32 envia um comando que permite a passagem pela trava eletrônica.
+Lá dentro o aluno escolhe um livro, este livro já deve estar posteriormente cadastrado com RFID no banco de dados. Na saída, o aluno escolhe se ele quer sair sem o livro ou empresta-lo por determinado tempo. Se o aluno escoher fazer o empréstimo, então o sistema verifica o RFID na saída, e scaneia o rosto novamente, cruzando os dados entre o aluno que sai e o livro que é verificado.
+Para o devido controle, um vigilante possuí dados de estrada e saída de cada aluno: de quando ele entrou, de quando ele saiu, de quanto ele ficou na sala, se ele pegou um livro ou não, e se houve movimentação nas prateleiras que não condiz com o dado de retirada de livro, movimentação que é verificada por meio de uma câmera com visão computacional apontada para a estante.
+O esp recebe a informação de se o sensor está identificando um livro e qual livro é, então manda o dado para o wifi e comunica com o sistema localizado no computador do administrador, para assim cruzar os dados de quem pega os livros e que livros são pegos

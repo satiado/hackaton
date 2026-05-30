@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CONECTECA Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <h2>CONECTECA</h2>
+            </div>
+
+            <nav>
+                <ul>
+                    <li class="active">
+                        <i class="fa-solid fa-table-columns"></i>
+                        Painel
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-users"></i>
+                        <a href=""></a>Alunos
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-book"></i>
+                        Livros
+                    </li>
+
+                    <li>
+                        <i class="fa-solid fa-gear"></i>
+                        Configurações
+                    </li>
+                </ul>
+            </nav>
+
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="content">
+
+            <!-- HEADER -->
+            <header class="topbar">
+
+                <div></div>
+
+                <div class="header-info">
+                    <i class="fa-regular fa-bell"></i>
+                    <i class="fa-regular fa-circle-question"></i>
+
+                    <div class="date">
+                        <strong>24 de Out, 2023</strong>
+                        <span>10:42 AM</span>
+                    </div>
+                </div>
+
+            </header>
+
+            <!-- CARDS -->
+            <section class="cards">
+
+                <div class="card">
+                    <i class="fa-solid fa-users"></i>
+                    <h3>Alunos na Biblioteca</h3>
+                    <span>3</span>
+                </div>
+
+                <div class="card">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <h3>Empréstimos Ativos</h3>
+                    <span>20</span>
+                </div>
+
+                <div class="card">
+                    <i class="fa-solid fa-book"></i>
+                    <h3>Livros Disponíveis</h3>
+                    <span>428</span>
+                </div>
+
+            </section>
+
+            <!-- ÁREA PRINCIPAL -->
+            <section class="dashboard">
+
+                <!-- TABELA -->
+                <div class="table-container">
+
+                    <div class="table-header">
+                        <h3>Atividade em Tempo Real</h3>
+                        <button>Filtrar</button>
+                    </div>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Entrada</th>
+                                <th>Duração</th>
+                                <th>Dia</th>
+                                <th>Status</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>Julios Carkos</td>
+                                <td>11:50</td>
+                                <td>20m</td>
+                                <td>02/11</td>
+                                <td>
+                                    <span class="saida">SAÍDA</span>
+                                </td>
+                                <td><a href="#">Ver Perfil</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>Julios Carkos</td>
+                                <td>11:30</td>
+                                <td>-</td>
+                                <td>02/11</td>
+                                <td>
+                                    <span class="entrada">ENTRADA</span>
+                                </td>
+                                <td><a href="#">Ver Perfil</a></td>
+                            </tr>
+
+                            <tr>
+                                <td>Sarah Adams</td>
+                                <td>11:10</td>
+                                <td>20m</td>
+                                <td>02/11</td>
+                                <td>
+                                    <span class="saida">SAÍDA</span>
+                                </td>
+                                <td><a href="#">Ver Perfil</a></td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- AVISOS -->
+                <aside class="avisos">
+
+                    <div class="avisos-header">
+                        <h3>Avisos</h3>
+                    </div>
+
+                    <div class="aviso-card">
+
+                        <img src="https://via.placeholder.com/60x80" alt="Livro">
+
+                        <div>
+                            <h4>Princípios de Física</h4>
+                            <p>Emprestado por Leo G.</p>
+                            <span class="vencido">2 dias vencido</span>
+                        </div>
+
+                    </div>
+
+                    <div class="aviso-card">
+
+                        <img src="https://via.placeholder.com/60x80" alt="Livro">
+
+                        <div>
+                            <h4>Química Orgânica II</h4>
+                            <p>Emprestado por Tom H.</p>
+                            <span class="alerta">3 dias restantes</span>
+                        </div>
+
+                    </div>
+
+                    <div class="aviso-card">
+
+                        <img src="https://via.placeholder.com/60x80" alt="Livro">
+
+                        <div>
+                            <h4>Cálculo</h4>
+                            <p>Emprestado por Diana W.</p>
+                            <span class="alerta">5 dias restantes</span>
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>
