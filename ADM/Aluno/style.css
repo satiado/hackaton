@@ -9,6 +9,10 @@ body{
     background:#f5f6fa;
 }
 
+.ass {
+    text-decoration: none;
+    color: #d9dce4;
+}
 .container{
     display:flex;
     min-height:100vh;

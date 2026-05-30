@@ -81,7 +81,10 @@ body{
     align-items:center;
     gap:25px;
 }
-
+.ass {
+    text-decoration: none;
+    color: #d9dce4;
+}
 .date{
     display:flex;
     flex-direction:column;
