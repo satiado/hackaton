@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leitor RFID Biblioteca</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f4f4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:400px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+h1{
+    text-align:center;
+    margin-bottom:20px;
+    color:#333;
+    font-size:1.5rem;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    margin-bottom:15px;
+    font-size:16px;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    background:#2d7ef7;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:bold;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+.card{
+    margin-top:20px;
+    background:#f9f9f9;
+    padding:15px;
+    border-radius:10px;
+    display:none;
+}
+
+.card h2{
+    margin-bottom:10px;
+    color:#2d7ef7;
+}
+
+.info{
+    margin:8px 0;
+    font-size:16px;
+}
+
+.status{
+    margin-top:15px;
+    text-align:center;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📚 Biblioteca RFID</h1>
+
+    <input
+        type="text"
+        id="rfid"
+        placeholder="Aproxime ou digite o RFID"
+    >
+
+    <button onclick="lerRFID()">
+        Ler Livro
+    </button>
+
+    <div class="card" id="resultado">
+        <h2>Livro Encontrado</h2>
+
+        <div class="info">
+            <strong>ID:</strong>
+            <span id="idLivro"></span>
+        </div>
+
+        <div class="info">
+            <strong>Livro:</strong>
+            <span id="nomeLivro"></span>
+        </div>
+
+        <div class="info">
+            <strong>Tipo:</strong>
+            <span id="tipoLivro"></span>
+        </div>
+    </div>
+
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+
+// Banco local
+const livros = [
+{
+    id: 1,
+    rfid: "A1B2C3D4",
+    nome: "Dom Casmurro",
+    tipo: "Romance"
+},
+{
+    id: 2,
+    rfid: "E5F6G7H8",
+    nome: "Algoritmos",
+    tipo: "Tecnologia"
+},
+{
+    id: 3,
+    rfid: "I9J0K1L2",
+    nome: "O Pequeno Príncipe",
+    tipo: "Infantil"
+}
+];
+
+function lerRFID(){
+
+    const codigo = document
+        .getElementById("rfid")
+        .value
+        .trim()
+        .toUpperCase();
+
+    const livro = livros.find(
+        item => item.rfid === codigo
+    );
+
+    const resultado = document.getElementById("resultado");
+    const status = document.getElementById("status");
+
+    if(livro){
+
+        document.getElementById("idLivro").textContent = livro.id;
+        document.getElementById("nomeLivro").textContent = livro.nome;
+        document.getElementById("tipoLivro").textContent = livro.tipo;
+
+        resultado.style.display = "block";
+
+        status.innerHTML = "✅ Livro identificado com sucesso";
+
+        // Salva histórico local
+        let historico =
+            JSON.parse(localStorage.getItem("historicoRFID")) || [];
+
+        historico.push({
+            data: new Date().toLocaleString(),
+            ...livro
+        });
+
+        localStorage.setItem(
+            "historicoRFID",
+            JSON.stringify(historico)
+        );
+
+    }else{
+
+        resultado.style.display = "none";
+
+        status.innerHTML =
+            "❌ RFID não encontrado no banco local";
+    }
+}
+
+// Enter também lê
+document
+.getElementById("rfid")
+.addEventListener("keypress", function(e){
+
+    if(e.key === "Enter"){
+        lerRFID();
+    }
+
+});
+</script>
+
+</body>
+</html>
