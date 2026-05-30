@@ -41,5 +41,7 @@
     gera alertas automáticos
     atualiza painel em tempo real
 
-
+- ESP32:
+    Lê dados do sensor RFID, se houverem dados: manda para banco de dados e relaciona o livro que foi pego e o aluno que pegou.
+    O aluno que pegou é relacionado quando na saída escolhe registrar a retirada de um livro, então pede o código para o sensor RFID que faz com que o ESP32 mande qual o livro que esta sendo emprestado e então relacione com o aluno que fez login para realizar a saída da biblioteca
  
