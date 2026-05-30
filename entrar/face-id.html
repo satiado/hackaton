@@ -66,20 +66,18 @@
 </head>
 <body class="bg-surface min-h-screen flex flex-col items-center p-0 m-0">
 
-<!-- Header -->
-<header class="w-full bg-custom-red p-4 shadow-md sticky top-0 z-10">
-  <div class="max-w-container-max mx-auto">
-    <h1 class="text-white text-2xl font-bold uppercase tracking-wider">CONECTECA</h1>
-  </div>
+<header class="w-full bg-custom-red p-4 shadow-md sticky top-0 z-10 flex items-center gap-3">
+  <button onclick="window.location.href='login.html'"
+    class="text-white bg-transparent border-none cursor-pointer flex items-center">
+    <span class="material-symbols-outlined">arrow_back</span>
+  </button>
+  <h1 class="text-white text-2xl font-bold uppercase tracking-wider">CONECTECA</h1>
 </header>
 
-<!-- Main Content -->
 <main class="flex-1 w-full max-w-md flex flex-col items-center justify-center gap-10 px-6 py-12">
 
-  <!-- Camera Container -->
   <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-white shadow-2xl bg-slate-900 transition-all duration-500 ease-in-out" id="media-container">
 
-    <!-- Video feed fica DENTRO do círculo -->
     <video
       id="camera-feed"
       autoplay
@@ -88,15 +86,12 @@
       class="absolute inset-0 w-full h-full object-cover">
     </video>
 
-    <!-- Efeitos visuais sobre o vídeo -->
     <div class="grain-effect"></div>
     <div class="pulsing-ring"></div>
     <div class="scanning-line"></div>
 
-    <!-- Ícone placeholder (visível antes da câmera carregar) -->
     <span class="material-symbols-outlined text-white/10 text-9xl select-none absolute inset-0 flex items-center justify-center">account_circle</span>
 
-    <!-- Cantos decorativos -->
     <div class="absolute top-8 left-8 border-t-2 border-l-2 border-custom-red/40 w-8 h-8 rounded-tl-lg"></div>
     <div class="absolute top-8 right-8 border-t-2 border-r-2 border-custom-red/40 w-8 h-8 rounded-tr-lg"></div>
     <div class="absolute bottom-8 left-8 border-b-2 border-l-2 border-custom-red/40 w-8 h-8 rounded-bl-lg"></div>
@@ -104,7 +99,6 @@
 
   </div>
 
-  <!-- Status Text -->
   <p class="text-custom-red text-xl font-bold uppercase tracking-widest text-center" id="status-text">
     APROXIME-SE DA CÂMERA
   </p>
@@ -147,6 +141,12 @@
 
       const ring = document.querySelector('.pulsing-ring');
       if (ring) ring.style.borderColor = 'rgba(34, 197, 94, 0.3)';
+
+      // Aguarda 1.5s exibindo "ROSTO IDENTIFICADO" antes de redirecionar
+      setTimeout(() => {
+        window.location.href = 'permitido.html';
+      }, 1500);
+
     }, 3000);
   }
 
