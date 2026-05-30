@@ -1,0 +1,45 @@
+- Aluno: 
+    Chega em frente do painel, faz login com face.id com dados do conecta, caso não seja possível, ele faz login com teclado digital da tela com os dados cadastrais do conecta, e então a porta abre.
+    Entra na biblioteca, a porta fecha, escolhe (ou não) um livro.
+    Na saída, possuí opção de registrar como ter pego um livro ou não: 
+        Se escolhido o livro, o aluno passa o livro no sensor RFID e faz novamente o login para sair da sala e os dados serem relacionados.
+        Se não, o aluno sai da sala sem livro, apenas realizando o login facial para registrar a saída.
+    Solicita agendamento das salas.
+    Possuí prazo limite para devolução
+
+- Professor: 
+    Entra e sai da biblioteca com Face.id ou login no teclado digital.
+    Realiza empréstimo de livros na saída.
+    Solicita agendamento das salas.
+    visualiza relatórios.
+
+- Vigiante:
+    Possuí chave para porta para abri-la em casos de queda de energia.
+    Recebe notificação de entrada na biblioteca.
+    Tem resposabilidade de supervisionar biblioteca.
+    Ao final do expediente, deve realizar varredura dos livros, checando se todos livros estão correspondentes aos dados do banco de dados, onde se houverem faltas não registradas, deve-se realizar verificação em câmeras de segurança.
+
+- Livros:
+    Possue cadastro utilizando RFID.
+    Possue status de disponibilidade.
+
+- Administrador: 
+    Cadastrar livros.
+    Gerar relatórios.
+    Visualizar todos livros em disponibilidade ou emprestados.
+    Visualizar o tempo que aluno está na sala.
+    Recebe alertas de atraso.
+
+- Sistema da Biblioteca:
+    detecta rostos em tempo real
+    compara com modelos faciais
+    lê etiquetas RFID dos livros
+    associa livro ao aluno
+    calcula prazos automaticamente
+    detecta livros desaparecidos
+    verifica conflito de agenda
+    gera alertas automáticos
+    atualiza painel em tempo real
+
+
+ 
