@@ -106,6 +106,34 @@
         }
       }
     </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen text-center p-4">
+
+  <h1 class="text-4xl font-bold mb-4">Aguardando Livro...</h1>
+  <p class="text-xl text-gray-500 mb-8" id="status">Passe o celular na tag NFC para liberar.</p>
+  
+  <div class="animate-pulse bg-blue-200 h-32 w-32 rounded-full flex items-center justify-center">
+    <span class="text-4xl">📚</span>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    // COLOQUE SUAS CHAVES DO SUPABASE AQUI
+    const supabase = createClient('SUA_URL_AQUI', 'SUA_CHAVE_AQUI');
+    const statusText = document.getElementById('status');
+
+    // Escutando o celular
+    const canal = supabase.channel('sala-conecteca');
+    canal.on('broadcast', { event: 'liberar' }, (mensagem) => {
+      statusText.innerText = "Acesso Liberado! Trocando de tela...";
+      statusText.classList.replace("text-gray-500", "text-green-600");
+      setTimeout(() => { window.location.href = 'permitido.html'; }, 1000);
+    }).subscribe();
+  </script>
+</body>
+</html>
 <style>
         .material-symbols-outlined {
           font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;

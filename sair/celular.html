@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Celular - Leitor NFC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 flex flex-col items-center justify-center min-h-screen text-center p-4">
+
+  <button id="btn-nfc" class="bg-red-600 text-white font-bold py-6 px-10 rounded-2xl text-2xl shadow-lg mb-8">
+    LIGAR LEITOR NFC
+  </button>
+  <p id="status" class="text-white text-lg">Aperte o botão acima.</p>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    // COLOQUE SUAS CHAVES DO SUPABASE AQUI (As mesmas chaves)
+    const supabase = createClient('https://gjigayvnwgobagwtzkrl.supabase.co/rest/v1/', 'SUA_CHAVE_AQUI');
+    const canal = supabase.channel('sala-conecteca');
+    canal.subscribe();
+
+    const btn = document.getElementById('btn-nfc');
+    const status = document.getElementById('status');
+
+    btn.addEventListener('click', async () => {
+      try {
+        const ndef = new NDEFReader();
+        await ndef.scan();
+        status.innerText = "Pode encostar a Tag NFC!";
+        btn.style.display = 'none';
+
+        ndef.addEventListener("reading", () => {
+          status.innerText = "Lido! Avisando o notebook...";
+          status.style.color = "lime";
+          
+          // Enviando o aviso para o notebook
+          canal.send({ type: 'broadcast', event: 'liberar', payload: { ok: true } });
+        });
+      } catch (error) {
+        status.innerText = "Erro. Navegador não suporta NFC.";
+        status.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>
