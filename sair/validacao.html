@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Conecteca - Validar Livro</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "tertiary-fixed-dim": "#4edea3",
+          "on-tertiary-container": "#bdffdb",
+          "primary-fixed-dim": "#b4c5ff",
+          "on-tertiary-fixed": "#002113",
+          "tertiary-container": "#007d55",
+          "surface-variant": "#e0e3e5",
+          "secondary": "#4059aa",
+          "on-secondary": "#ffffff",
+          "inverse-surface": "#2d3133",
+          "surface-bright": "#f7f9fb",
+          "primary": "#004ac6",
+          "on-error-container": "#93000a",
+          "inverse-on-surface": "#eff1f3",
+          "on-tertiary": "#ffffff",
+          "on-background": "#191c1e",
+          "error": "#ba1a1a",
+          "surface": "#f7f9fb",
+          "secondary-container": "#8fa7fe",
+          "primary-container": "#2563eb",
+          "on-tertiary-fixed-variant": "#005236",
+          "on-error": "#ffffff",
+          "outline": "#737686",
+          "secondary-fixed-dim": "#b6c4ff",
+          "on-secondary-fixed": "#00164e",
+          "on-primary": "#ffffff",
+          "on-primary-fixed-variant": "#003ea8",
+          "surface-container-low": "#f2f4f6",
+          "surface-container": "#eceef0",
+          "surface-container-high": "#e6e8ea",
+          "inverse-primary": "#b4c5ff",
+          "on-surface-variant": "#434655",
+          "on-secondary-fixed-variant": "#264191",
+          "surface-container-lowest": "#ffffff",
+          "secondary-fixed": "#dce1ff",
+          "on-secondary-container": "#1d3989",
+          "on-primary-fixed": "#00174b",
+          "surface-container-highest": "#e0e3e5",
+          "tertiary-fixed": "#6ffbbe",
+          "on-surface": "#191c1e",
+          "tertiary": "#006242",
+          "surface-dim": "#d8dadc",
+          "primary-fixed": "#dbe1ff",
+          "surface-tint": "#0053db",
+          "error-container": "#ffdad6",
+          "outline-variant": "#c3c6d7",
+          "on-primary-container": "#eeefff",
+          "background": "#ffffff",
+          "brand-red": "#cc292b"
+        },
+        borderRadius: {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        spacing: {
+          "margin-mobile": "16px",
+          "margin-desktop": "32px",
+          "container-max": "1280px",
+          "base": "8px",
+          "column-count": "12",
+          "gutter": "24px"
+        },
+        fontFamily: {
+          "headline-lg": ["Inter"],
+          "body-sm": ["Inter"],
+          "headline-md": ["Inter"],
+          "body-md": ["Inter"],
+          "body-lg": ["Inter"],
+          "headline-xl": ["Inter"],
+          "headline-sm": ["Inter"],
+          "headline-lg-mobile": ["Inter"],
+          "label-md": ["Inter"]
+        },
+        fontSize: {
+          "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.01em", fontWeight: "700" }],
+          "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+          "headline-md": ["24px", { lineHeight: "32px", fontWeight: "600" }],
+          "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+          "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+          "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }],
+          "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+          "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+          "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+  @keyframes scan-line {
+    0% { transform: translateY(-300%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(300%); opacity: 0; }
+  }
+  .animate-scan-line {
+    animation: scan-line 3s linear infinite;
+  }
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+</style>
+</head>
+<body class="bg-background min-h-screen flex flex-col font-body-md text-on-surface">
+
+  <!-- Header -->
+  <header class="bg-brand-red w-full h-16 flex items-center px-margin-desktop fixed top-0 left-0 z-50 gap-3">
+    <button onclick="window.location.href='permitido.html'"
+      class="text-white bg-transparent border-none cursor-pointer flex items-center">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+    <h1 class="font-headline-sm text-headline-sm text-white uppercase tracking-wider">CONECTECA</h1>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-grow flex flex-col items-center justify-center pt-16 px-margin-mobile md:px-margin-desktop">
+    <div class="flex flex-col items-center max-w-lg text-center space-y-8 animate-fade-in-up">
+
+      <h2 class="font-headline-xl text-headline-xl uppercase text-on-background leading-tight">
+        DESEJA VALIDAR<br>O LIVRO?
+      </h2>
+
+      <!-- Botões -->
+      <div class="flex flex-col sm:flex-row gap-6 w-full justify-center mt-4">
+
+        <button onclick="window.location.href='validacao.html'"
+          class="bg-tertiary-container hover:bg-tertiary text-on-tertiary-container hover:text-on-tertiary font-headline-sm py-4 px-12 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 min-w-[160px] active:scale-95 flex items-center justify-center gap-2 group cursor-pointer border-none">
+          <span class="material-symbols-outlined transition-transform group-hover:scale-110">check_circle</span>
+          SIM
+        </button>
+
+        <button onclick="window.location.href='permitido.html'"
+          class="bg-error hover:opacity-90 text-on-error font-headline-sm py-4 px-12 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 min-w-[160px] active:scale-95 flex items-center justify-center gap-2 group cursor-pointer border-none">
+          <span class="material-symbols-outlined transition-transform group-hover:scale-110">cancel</span>
+          NÃO
+        </button>
+
+      </div>
+
+      <!-- Ícone do livro -->
+      <div class="mt-8 relative flex justify-center items-center h-64 w-64">
+        <span class="material-symbols-outlined text-surface-dim" style="font-size: 180px; font-variation-settings: 'FILL' 1;">book</span>
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary-fixed-dim/30 to-transparent animate-scan-line h-4 w-full rounded-full blur-sm top-1/2 -translate-y-1/2"></div>
+      </div>
+
+      <!-- Status NFC -->
+      <p class="text-on-surface-variant text-body-md font-medium" id="status">
+        Aguardando leitura NFC do livro...
+      </p>
+
+    </div>
+  </main>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+    const supabase = createClient(
+      'gjigayvnwgobagwtzkrl',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqaWdheXZud2dvYmFnd3R6a3JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxMTE0MDksImV4cCI6MjA5NTY4NzQwOX0.AvRtYGBtnumkgCM1Svefxbihb5XyWBmHqiXQooicBKU'
+    );
+
+    const statusText = document.getElementById('status');
+
+    const canal = supabase.channel('sala-conecteca');
+    canal.on('broadcast', { event: 'liberar' }, () => {
+      statusText.innerText = "✅ Livro identificado! Redirecionando...";
+      statusText.classList.add('text-tertiary');
+      setTimeout(() => { window.location.href = 'permitido.html'; }, 1000);
+    }).subscribe();
+  </script>
+
+</body>
+</html>
